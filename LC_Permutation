@@ -1,36 +1,26 @@
 public class Solution {
-	public static void permute(int[] num, int start,boolean[] used,int count, ArrayList<Integer>cur, ArrayList<ArrayList<Integer>>col){
-		if(count==0){
+	public static void permuteHelper(int[] num,boolean[] used, ArrayList<Integer>cur, ArrayList<ArrayList<Integer>>col){
+		if(cur.size()==num.length){
 			col.add(cur);
 			return;
 		}
-		boolean loop = false;
-		Integer last=null;
-		for(int i=start;!loop || i<start;i++){
-			if(i>=num.length){
-				i=-1;
-				loop=true;
-			}
-			else if(used[i] || (last!=null&&num[i]==last)){
+		for(int i=0;i<num.length;i++){
+			if(used[i] || (i>0 && num[i]==num[i-1] && !used[i-1]))
 				continue;
-			}
-			else{
-				used[i]=true;
-				ArrayList<Integer> newCur= new ArrayList<Integer>(cur);
-				newCur.add(num[i]);
-				permute(num,i+1,used,count-1,newCur,col);
-				used[i]=false;
-				last=num[i];
-			}
+			used[i]=true;
+			ArrayList<Integer> newCur= new ArrayList<Integer>(cur);
+			newCur.add(num[i]);
+			permuteHelper(num,used,newCur,col);
+			used[i]=false;
 		}
 	}
 	public static ArrayList<ArrayList<Integer>> permuteUnique(int[] num){
 		ArrayList<ArrayList<Integer>> ret=new ArrayList<ArrayList<Integer>>();
 		if(num==null||num.length==0)
 			return ret;
-	    Arrays.sort(num);
+		Arrays.sort(num);
 		boolean[] used=new boolean[num.length];
-		permute(num,0,used,num.length,new ArrayList<Integer>(),ret);
+		permuteHelper(num,used,new ArrayList<Integer>(),ret);
 		return ret;
 	}
 }
