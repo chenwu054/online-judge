@@ -1,0 +1,61 @@
+/*
+
+  Given a collection of integers that might contain duplicates, S, return all possible subsets.
+
+Note:
+Elements in a subset must be in non-descending order.
+The solution set must not contain duplicate subsets.
+For example,
+If S = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+*/
+public static ArrayList<ArrayList<Integer>> subsets(int[] num) {
+    // Note: The Solution object is instantiated only once and is reused by each test case.
+    ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+    if(num==null||num.length==0)
+        return ret;
+    ret.add(new ArrayList<Integer>());
+    Arrays.sort(num);
+    for(int i=0;i<num.length;i++){
+        int length=ret.size();
+        for(int j=0;j<length;j++){
+            ret.add(new ArrayList<Integer>(ret.get(j)));
+            ret.get(length+j).add(num[i]);       
+        }
+    }
+    return ret;
+}
+public static ArrayList<ArrayList<Integer>> subsetsWithDup(int[] num) {
+    // Note: The Solution object is instantiated only once and is reused by each test case.
+    ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+    if(num==null||num.length==0)
+        return ret;
+    ret.add(new ArrayList<Integer>());
+    Arrays.sort(num);
+    int length=0,lastLength=0;
+    for(int i=0;i<num.length;i++){
+        length=ret.size();
+        if(i>0 && num[i]==num[i-1]){
+        	for(int j=lastLength;j<length;j++){
+        		ret.add(new ArrayList<Integer>(ret.get(j)));
+        		ret.get(ret.size()-1).add(num[i]);
+        	}
+        }
+        else{
+        	for(int j=0;j<length;j++){
+        		ret.add(new ArrayList<Integer>(ret.get(j)));
+                ret.get(ret.size()-1).add(num[i]);           
+            }
+        }
+        lastLength=length;
+    }
+    return ret;
+}
