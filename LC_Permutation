@@ -1,0 +1,77 @@
+public class Solution {
+	public static void permute(int[] num, int start,boolean[] used,int count, ArrayList<Integer>cur, ArrayList<ArrayList<Integer>>col){
+		if(count==0){
+			col.add(cur);
+			return;
+		}
+		boolean loop = false;
+		Integer last=null;
+		for(int i=start;!loop || i<start;i++){
+			if(i>=num.length){
+				i=-1;
+				loop=true;
+			}
+			else if(used[i] || (last!=null&&num[i]==last)){
+				continue;
+			}
+			else{
+				used[i]=true;
+				ArrayList<Integer> newCur= new ArrayList<Integer>(cur);
+				newCur.add(num[i]);
+				permute(num,i+1,used,count-1,newCur,col);
+				used[i]=false;
+				last=num[i];
+			}
+		}
+	}
+	public static ArrayList<ArrayList<Integer>> permuteUnique(int[] num){
+		ArrayList<ArrayList<Integer>> ret=new ArrayList<ArrayList<Integer>>();
+		if(num==null||num.length==0)
+			return ret;
+	    Arrays.sort(num);
+		boolean[] used=new boolean[num.length];
+		permute(num,0,used,num.length,new ArrayList<Integer>(),ret);
+		return ret;
+	}
+}
+
+//use hashset to avoid duplicates
+public class Solution {
+	public ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		// Note: The Solution object is instantiated only once and is reused by each test case.
+		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+		if (num == null) return result;
+		Arrays.sort(num);
+		permute(num, 0, result);
+
+        return result;
+	}
+
+	private void permute(int[] num, int index, ArrayList<ArrayList<Integer>> result) {
+		if (index == num.length) {
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			for (int i : num) {
+				list.add(i);
+			}
+			result.add(list);
+			return;
+		}
+        HashSet<Integer> used =new HashSet<Integer>();
+		for (int i = index; i < num.length; i++) {
+		    //if (i < num.length - 1 && num[i] == num[i + 1]) continue;
+			if(!used.contains(num[i])){
+			    swap(num, index, i);
+			    permute(num, index + 1, result);
+			    swap(num, index, i);
+			    used.add(num[i]);
+			}
+		}
+	}
+
+	private void swap(int[] num, int i, int j)
+	{
+		int tmp = num[i];
+		num[i] = num[j];
+		num[j] = tmp;
+	}
+}
