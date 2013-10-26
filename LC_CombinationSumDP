@@ -27,11 +27,11 @@ public class Solution {
            for(int j=0;j<c.length;j++){
                if(i-c[j]>=0){
                     for(ArrayList<Integer> arr : dp.get(i-c[j])){
-  				if(arr.size()==0 || c[j]>=arr.get(arr.size()-1)){
-  					ArrayList<Integer> newRow = new ArrayList<Integer>(arr);
-  				    newRow.add(c[j]);
-  					dp.get(i).add(newRow);
-  				}
+  		if(arr.size()==0 || c[j]>=arr.get(arr.size()-1)){
+  			ArrayList<Integer> newRow = new ArrayList<Integer>(arr);
+  		    newRow.add(c[j]);
+  			dp.get(i).add(newRow);
+  		}
                    }
                }
            }
