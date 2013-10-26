@@ -1,0 +1,45 @@
+public class Solution {
+    
+public String strStr(String s, String t){
+  	if(s==null || s.length()==0)
+  		return t==null||t.length()==0?s:null;
+  	if(t==null||t.length()==0)
+  		return s;
+  	if(t.length()>s.length())
+  		return null;
+  	int n=s.length();
+  	int m=t.length();
+  	int[] lcp=new int[m]; // longest common prefix,it stores  the length(not index, so it is 1-based)
+  	int i=1;
+  	int len=0;
+  	while(i<m){
+  		if(t.charAt(i)==t.charAt(len))
+  			lcp[i++]=++len;
+  		else{
+  			if(len>0)
+  				len=lcp[len-1];
+  			else
+  				lcp[i++]=len;
+  		}
+  	}
+  	i=0;
+  	len=0;
+  	while(i<s.length()){
+  		if(s.charAt(i)==t.charAt(len)){
+  			i++;
+  			len++;
+  		}
+  		else{
+  			if(len>0)
+  				len=lcp[len-1];
+  			else
+  				i++;
+  		}
+  		if(len==m){
+  			return s.substring(i-m);
+  		}
+  
+  	}
+  	return null;
+  }
+}
