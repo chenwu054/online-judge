@@ -1,0 +1,36 @@
+/*
+Given preorder and inorder traversal of a tree, construct the binary tree.
+*/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode build(int[] preorder,int[] preStart,int[] inorder,int inStart,int inEnd){
+        if(inStart>inEnd)
+            return null;
+        int  i =inStart;
+        while(i<=inEnd && inorder[i]!=preorder[preStart[0]]){
+            i++;
+        }
+        TreeNode root = new TreeNode(preorder[preStart[0]++]);
+        TreeNode left= build(preorder,preStart,inorder,inStart,i-1);
+        TreeNode right= build(preorder,preStart,inorder,i+1,inEnd);
+        root.left=left;
+        root.right=right;
+        return root;
+    }
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if(preorder==null||inorder==null||preorder.length==0||inorder.length==0||inorder.length!=preorder.length)
+            return null;
+        int[] preStart={0};
+        return build(preorder,preStart,inorder,0,inorder.length-1);
+    }
+}
