@@ -1,0 +1,98 @@
+/*
+Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.
+
+For example:
+Given the below binary tree and sum = 22,
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \      \
+        7    2      1
+return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
+*/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+
+    public boolean hasPathSum(TreeNode root, int sum) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if(root==null)
+            return false;
+        if(root.left==null && root.right==null)
+            return sum-root.val==0;
+        return hasPathSum(root.left,sum-root.val) || hasPathSum(root.right,sum-root.val);
+    }
+}
+
+
+/*
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+For example:
+Given the below binary tree and sum = 22,
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+return
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+*/
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void path(TreeNode root, int sum ,ArrayList<Integer> cur, ArrayList<ArrayList<Integer>> col){
+        if(root==null)
+            return;
+        if(root.left==null && root.right==null){
+            if(root.val==sum){
+                cur.add(root.val);   
+                col.add(cur);
+            }
+            return;
+        }
+        
+        if(root.left!=null){
+            ArrayList<Integer> newCur= new ArrayList<Integer>(cur);
+            newCur.add(root.val);
+            path(root.left,sum-root.val,newCur,col);
+        }
+        if(root.right!=null){
+            ArrayList<Integer> newCur= new ArrayList<Integer>(cur);
+            newCur.add(root.val);
+            path(root.right,sum-root.val,newCur,col);
+        }
+        
+    }
+    public ArrayList<ArrayList<Integer>> pathSum(TreeNode root, int sum) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+        if(root==null)
+            return ret;
+        path(root,sum,new ArrayList<Integer>(), ret);
+        return ret;
+    }
+}
