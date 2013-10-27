@@ -1,0 +1,37 @@
+public class Solution {
+    public int ladderLength(String start, String end, HashSet<String> dict) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        HashSet<String> visited = new HashSet<String>();
+        visited.add(start);
+        Queue<String> q = new LinkedList<String>();
+        Queue<String> toVisit= new LinkedList<String>();
+        Queue<String> temp=null;
+        int length=2;
+        q.offer(start);
+        while(q.size()>0){
+            while(q.size()>0){
+                String str =q.poll();
+                for(int i=0;i<str.length();i++){
+                    StringBuilder sb = new StringBuilder(str);
+                    for(int j='a';j<='z';j++){
+                        sb.setCharAt(i,(char)j);
+                        String cur = sb.toString();
+                        if(end.equals(cur))
+                            return length;
+                        if(!visited.contains(cur) && dict.contains(cur)){
+                            visited.add(cur);
+                            toVisit.add(cur);
+                        }
+                    }
+                }
+                
+            }
+            length++;
+            temp = q;
+            q=toVisit;
+            toVisit=temp;
+        }
+        return 0;
+    }
+}
