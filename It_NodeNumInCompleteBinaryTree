@@ -1,0 +1,43 @@
+//使用TreeNodeUtil.getLeftChildNode(TreeNode)获得左儿子结点
+//使用TreeNodeUtil.getRightChildNode(TreeNode)获得右儿子结点
+//使用TreeNodeUtil.isNullNode(TreeNode)判断结点是否为空
+public class CountCompleteBinayTreeNodes {
+    public int countNodes(TreeNode root) {
+        if(TreeNodeUtil.isNullNode(root))
+            return 0;
+        TreeNode leftNode=root;
+        TreeNode rightNode=root;
+        int left=0,right=0;
+        while(!TreeNodeUtil.isNullNode(leftNode)){
+            left++;
+            leftNode=TreeNodeUtil.getLeftChildNode(leftNode);
+        }
+        while(!TreeNodeUtil.isNullNode(rightNode)){
+            right++;
+            rightNode= TreeNodeUtil.getRightChildNode(rightNode);
+        }
+        if(left==right)
+            return (1<<left)-1;
+        int tot=(1<<right)-1;
+        TreeNode node = root;
+        TreeNode parent =root;
+        while(!TreeNodeUtil.isNullNode(parent)){
+            int length=0;
+            node= TreeNodeUtil.getLeftChildNode(parent);
+            
+            while(!TreeNodeUtil.isNullNode(node)){
+                node=TreeNodeUtil.getRightChildNode(node);
+                length++;
+            }
+            if(length==right){
+                tot+=1<<(right-1);
+                parent=TreeNodeUtil.getRightChildNode(parent);
+            }
+            else{
+                parent=TreeNodeUtil.getLeftChildNode(parent);
+            }
+            right--;
+        }
+        return tot;
+    }
+}
