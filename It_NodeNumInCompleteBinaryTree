@@ -1,6 +1,6 @@
-//使用TreeNodeUtil.getLeftChildNode(TreeNode)获得左儿子结点
-//使用TreeNodeUtil.getRightChildNode(TreeNode)获得右儿子结点
-//使用TreeNodeUtil.isNullNode(TreeNode)判断结点是否为空
+//Use TreeNodeUtil.getLeftChildNode(TreeNode) to get the left child
+//Use TreeNodeUtil.getRightChildNode(TreeNode) to get the right child;
+//Use TreeNodeUtil.isNullNode(TreeNode) to find if a node is null;
 public class CountCompleteBinayTreeNodes {
     public int countNodes(TreeNode root) {
         if(TreeNodeUtil.isNullNode(root))
