@@ -1,0 +1,63 @@
+/*
+  Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+For example,
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC".
+
+Note:
+If there is no such window in S that covers all characters in T, return the emtpy string "".
+
+If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
+*/
+public class Solution {
+    private boolean covers(Map<Character,Integer>s,Map<Character,Integer>t){
+        for(Character c : t.keySet()){
+            if(!s.containsKey(c) || s.get(c)<t.get(c))
+                return false;
+        }
+        return true;
+    }
+    public String minWindow(String S, String T) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if(S==null||S.length()==0)
+            return T==null||T.length()==0?"":null;
+        Map<Character,Integer> t = new HashMap<Character,Integer>();
+        for(int i=0;i<T.length();i++){
+            if(!t.containsKey(T.charAt(i)))
+                t.put(T.charAt(i),0);
+            t.put(T.charAt(i),1+t.get(T.charAt(i)));
+        }
+        Map<Character,Integer> s = new HashMap<Character,Integer>();
+        for(Character c:t.keySet())
+            s.put(c,0);
+        int minLength=S.length()+1;
+        int i=0,j=0;
+        int minStart=-1,minEnd=-1;
+        while(i<S.length()){
+            char ch = S.charAt(i);
+            if(t.containsKey(ch)){
+                s.put(ch,1+s.get(ch));
+                while(j<=i && covers(s,t)){
+                    while(j<=i && !t.containsKey(S.charAt(j)))
+                        j++;
+                    if(i-j+1<minLength){
+                        minLength=i-j+1;
+                        minStart=j;
+                        minEnd=i;
+                    }
+                    if(j<=i){
+                        s.put(S.charAt(j),s.get(S.charAt(j))-1);
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+        if(minLength==S.length()+1)
+            return "";
+        return S.substring(minStart,minEnd+1);
+    }
+}
