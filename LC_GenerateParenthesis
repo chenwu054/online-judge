@@ -1,0 +1,31 @@
+/*
+  Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given n = 3, a solution set is:
+
+"((()))", "(()())", "(())()", "()(())", "()()()"
+*/
+public class Solution {
+    
+    private void generate(int left,int right, StringBuilder cur,ArrayList<String>col){
+        if(left==0 && right==0){
+            col.add(cur.toString());
+            return;
+        }
+        if(right<right)
+            return;
+        if(left>0)
+            generate(left-1,right,new StringBuilder(cur).append('('),col);
+        if(right>left)
+            generate(left,right-1,new StringBuilder(cur).append(')'),col);
+    }
+    public ArrayList<String> generateParenthesis(int n) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        ArrayList<String> ret = new ArrayList<String>();
+        if(n==0)
+            return ret;
+        generate(n,n,new StringBuilder(),ret);
+        return ret;
+    }
+}
