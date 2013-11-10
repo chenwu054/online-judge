@@ -1,0 +1,76 @@
+/*
+Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations:
+get and set.
+
+get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+set(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity,
+it should invalidate the least recently used item before inserting a new item.
+*/
+public class LRUCache {
+    static class DoubleListNode{
+        int key,val;
+        DoubleListNode prev,next;
+        public DoubleListNode(int k,int v){
+            key=k;val=v;
+            prev=null;next=null;
+        }
+    }
+    Map<Integer,DoubleListNode> map;
+    DoubleListNode head,tail;
+    int capacity;
+    int count;
+    public LRUCache(int capacity) {
+        assert(capacity>0);
+        this.capacity=capacity;
+        count=0;
+        head=new DoubleListNode(0,0);
+        tail=new DoubleListNode(0,0);
+        head.next=tail;
+        tail.prev=head;
+        map=new HashMap<Integer,DoubleListNode>();
+    }
+    
+    public int get(int key) {
+        if(!map.containsKey(key))
+            return -1;
+        DoubleListNode node = map.get(key);
+        node.next.prev=node.prev;
+        node.prev.next=node.next;
+        node.prev=head;
+        node.next=head.next;
+        head.next.prev=node;
+        head.next=node;
+        return node.val;
+    }
+    
+    public void set(int key, int value) {
+        if(!map.containsKey(key)){
+            DoubleListNode newNode= new DoubleListNode(key,value);
+            map.put(key,newNode);
+            newNode.next=head.next;
+            newNode.prev=head;
+            head.next.prev=newNode;
+            head.next=newNode;
+            if(count==capacity){
+                DoubleListNode remove = tail.prev;
+                remove.prev.next=remove.next;
+                remove.next.prev=remove.prev;
+                remove.next=null;
+                remove.prev=null;
+                map.remove(remove.key);
+            }
+            else
+                count++;
+        }
+        else{
+            DoubleListNode node=map.get(key);
+            node.val=value;
+            node.next.prev=node.prev;
+            node.prev.next=node.next;
+            node.next=head.next;
+            node.prev=head;
+            head.next.prev=node;
+            head.next=node;
+        }
+    }
+}
