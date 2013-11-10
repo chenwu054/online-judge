@@ -1,0 +1,54 @@
+/*
+  Write a function to find the longest common prefix string amongst an array of strings.
+*/
+public class Solution {
+    static class Node{
+        char c;
+        Node next;
+        public Node(char c){
+            this.c = c;
+            next=null;
+        }
+    }
+    public void insert(Node root,String str,int start){
+        if(start==str.length())
+            return;
+        if(root.next==null){
+            root.next=new Node(str.charAt(start));
+        }
+        insert(root.next,str,start+1);
+    }
+    /*public String longestCommonPrefix(String[] strs) {
+        
+    }*/
+    public String longestCommonPrefix(String[] strs) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if(strs==null||strs.length==0)
+            return "";
+        String shortest=strs[0];
+        for(int i=1;i<strs.length;i++){
+            if(strs[i].length()<shortest.length())
+                shortest=strs[i];
+        }
+        if(shortest.length()==0)
+            return "";
+        Node root=new Node(shortest.charAt(0));
+        insert(root,shortest,1);
+        Node node=root; 
+        int len=0;
+        int maxLen=shortest.length();
+        for(int i=0;i<strs.length;i++){
+            String cur = strs[i];
+            node=root;
+            len=0;
+            while(node!=null && len<cur.length() && node.c==cur.charAt(len)){
+                len++;
+                node=node.next;
+            }
+            if(len<maxLen)
+                maxLen=len;
+        }
+        return shortest.substring(0,maxLen);
+    }
+}
