@@ -1,0 +1,70 @@
+/*
+  Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing all ones and return its area.
+*/
+public class Solution {
+    public int getLength(char[][] matrix, int row, int col){
+        int count=0;
+        while(col<matrix[row].length){
+            if(matrix[row][col]=='0')
+                break;
+            count++;
+            col++;
+        }
+        return count;
+    }
+    public int getArea(char[][] matrix,boolean[][] visited, int row, int col){
+        ArrayList<Integer> h = new ArrayList<Integer>();
+        while(row<matrix.length){
+            int len = getLength(matrix,row,col);
+            if(len==0)
+                break;
+            h.add(len);
+            visited[row++][col]=true;
+        }
+        int maxArea = 0,area=0;
+        Stack<Integer> k = new Stack<Integer>();
+        Stack<Integer> index = new Stack<Integer>();
+        k.push(0);
+        index.push(-1);
+        int height=0;
+        for(int i=0;i<=h.size();i++){
+            height=i<h.size()?h.get(i):0;
+            if(height>=k.peek()){
+                k.push(height);
+                index.push(i);
+            }
+            else{
+                while(height<k.peek()){
+                    int lastH = k.pop();
+                    index.pop();
+                    area = lastH*(i-index.peek()-1);
+                    if(area>maxArea)
+                        maxArea=area;
+                }
+                k.push(height);
+                index.push(i);
+            }
+        }
+        return maxArea;
+    }
+    public int maximalRectangle(char[][] matrix) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if(matrix==null||matrix.length==0)
+            return 0;
+        int n= matrix.length,m=matrix[0].length;
+        boolean[][] visited=new boolean[n][m];
+        int area=0;
+        int maxArea=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(matrix[i][j]=='1' && !visited[i][j]){
+                    area=getArea(matrix,visited,i,j);
+                    if(area>maxArea)
+                        maxArea=area;
+                }
+            }
+        }
+        return maxArea;
+    }
+}
