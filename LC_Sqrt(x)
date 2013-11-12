@@ -27,3 +27,24 @@ public class Solution {
         return end;
     }
 }
+
+double sqrt(double num,double epsilon)
+    {
+       if(num<=0)  
+           return 0.0;
+       if(num==1.0)
+          return 1.0
+       double start=num>1.0?1.0:0.0;
+       double end=num>1.0?num:1.0;
+       while( end-start>epsilon )
+       {
+           double mid= start+(end-start)/2.0;
+           if( Math.abs(mid-num/mid)<epsilon)
+               return mid;
+           else if(mid>start/mid)
+               start=mid;
+           else
+               end=mid;
+       }
+       return 0.0;
+    }
