@@ -1,0 +1,46 @@
+/*
+Given a collection of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+Each number in C may only be used once in the combination.
+
+Note:
+All numbers (including target) will be positive integers.
+Elements in a combination (a1, a2, … , ak) must be in non-descending order. (ie, a1 ≤ a2 ≤ … ≤ ak).
+The solution set must not contain duplicate combinations.
+For example, given candidate set 10,1,2,7,6,1,5 and target 8, 
+A solution set is: 
+[1, 7] 
+[1, 2, 5] 
+[2, 6] 
+[1, 1, 6] 
+********* be sure to remove duplicates *****
+*/
+public class Solution {
+    private void collect(int[] num, int start, int left, ArrayList<Integer>cur, ArrayList<ArrayList<Integer>> ret){
+        if(left==0){
+            ret.add(cur);
+            return;
+        }
+        if(start==num.length)
+            return;
+        int i=start;
+        while(i<num.length&&left>=num[i]){
+            ArrayList<Integer> next =new ArrayList<Integer>(cur);
+            next.add(num[i]);
+            collect(num,i+1,left-num[i],next,ret);
+            i++;
+            while(i<num.length && num[i]==num[i-1])
+                i++;
+        }
+    }
+    public ArrayList<ArrayList<Integer>> combinationSum2(int[] num, int target) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        ArrayList<ArrayList<Integer>> ret =new ArrayList<ArrayList<Integer>>();
+        if(num==null||num.length==0)
+            return ret;
+        Arrays.sort(num);
+        collect(num,0,target,new ArrayList<Integer>(), ret);
+        return ret;
+    }
+}
