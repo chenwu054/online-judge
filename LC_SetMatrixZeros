@@ -1,0 +1,46 @@
+/*
+  
+*/
+public class Solution {
+    public void setZeroes(int[][] matrix) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if(matrix==null||matrix.length==0)
+            return ;
+        int row=-1,col=-1;
+        int n=matrix.length,m=matrix[0].length;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(matrix[i][j]==0){
+                    row=i;
+                    col=j;
+                    break;
+                }
+            }
+        }
+        if(col<0)
+            return;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(matrix[i][j]==0){
+                    matrix[row][j]=0;
+                    matrix[i][col]=0;
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            if(matrix[i][col]==0 && i!=row){
+                for(int j=0;j<m;j++) matrix[i][j]=0;
+            }
+        }
+        for(int j=0;j<m;j++){
+            if(matrix[row][j]==0 && j!=col){
+                for(int i=0;i<n;i++) matrix[i][j]=0;
+            }
+        }
+        for(int i=0;i<n;i++)
+            matrix[i][col]=0;
+        for(int j=0;j<m;j++)
+            matrix[row][j]=0;
+    }
+}
