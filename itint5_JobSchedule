@@ -1,0 +1,49 @@
+/*
+  jobs 1 to n and have dependencies as following：
+n=5
+1->2,3
+3->4
+
+In the above example the output should be 4,3,2,1,5
+
+
+*/
+import java.util.List;
+import java.util.Map;
+import java.util.*;
+public class JobScheduler {
+    public boolean dfs(Map<Integer,List<Integer>> deps,boolean[] visited
+                       ,int start, boolean[] path,int[] result, int[] index){
+        if(visited[start-1])
+            return true;
+        if(path[start-1])
+            return false;
+        path[start-1]=true;
+        if(deps.containsKey(start)){
+            for(Integer next:deps.get(start)){
+                boolean valid = dfs(deps,visited,next,path,result,index);
+                if(!valid)
+                    return false;
+            }    
+        }
+        result[index[0]++]=start;
+        visited[start-1]=true;
+        path[start-1]=false;
+        return true;
+    }
+    public boolean jobSchedule(Map<Integer, List<Integer>> deps, int n,
+                                int[] result) {
+        
+        boolean[] visited = new boolean[n];
+        boolean[] path = new boolean[n];
+        int[] index = {0};
+        for(int i=1;i<=n;i++){
+            if(!visited[i-1]){
+                boolean valid = dfs(deps,visited,i,path,result,index);
+                if(!valid)
+                    return false;
+            }
+        }
+        return true;
+   }
+}
