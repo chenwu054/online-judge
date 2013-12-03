@@ -1,0 +1,49 @@
+/*
+  
+*/
+class Rect {
+  int x1,y1,x2,y2;
+}
+public class PlaceWindow {
+	public int getOverlappingArea(Rect r1, Rect r2){
+		int x1=Math.max(r1.x1,r2.x1);
+		int x2=Math.min(r1.x2,r2.x2);
+		int y1=Math.max(r1.y1,r2.y1);
+		int y2=Math.min(r1.y2,r2.y2);
+		if(x1>x2||y1>y2)
+			return 0;
+		return (x2-x1)*(y2-y1);
+	}
+	public int minOverlapping(Rect[] rects, int W, int H, int w, int h) {
+		if(rects==null||rects.length==0)
+			return 0;
+		ArrayList<Integer> xplace=new ArrayList<Integer>();
+		ArrayList<Integer> yplace=new ArrayList<Integer>();
+		xplace.add(0);
+		yplace.add(0);
+		xplace.add(H-h);
+		yplace.add(W-w);
+		for(int i=0;i<rects.length;i++){
+			if(rects[i].x1-h>=0) xplace.add(rects[i].x1-h);
+			if(rects[i].x2+h<=H) xplace.add(rects[i].x2);
+			if(rects[i].y1-w>=0) yplace.add(rects[i].y1-w);
+			if(rects[i].y2+w<=W) yplace.add(rects[i].y2);
+		}
+		int ret = w*h;
+		int area=0;
+		Rect rec = new Rect(0,0,0,0);
+		for(int i=0;i<xplace.size();i++){
+			for(int j=0;j<yplace.size();j++){
+				area=0;
+				rec.x1=xplace.get(i);rec.x2=xplace.get(i)+h;
+				rec.y1=yplace.get(j);rec.y2=yplace.get(j)+w;
+				for(int k=0;k<rects.length;k++){
+					area+=getOverlappingArea(rects[k],rec);
+				}
+				if(area<ret)
+					ret=area;
+			}
+		}
+		return ret;
+	}
+}
