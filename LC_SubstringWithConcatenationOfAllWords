@@ -1,0 +1,41 @@
+/*
+  You are given a string, S, and a list of words, L, that are all of the same length. Find all starting indices of substring(s) in S that is a concatenation of each word in L exactly once and without any intervening characters.
+
+For example, given:
+S: "barfoothefoobarman"
+L: ["foo", "bar"]
+
+You should return the indices: [0,9].
+(order does not matter).
+*/
+public class Solution {
+    public boolean contains(String s, int start,int len,int num, Map<String,Integer> map){
+        Map<String,Integer> words = new HashMap<String,Integer>();
+        for(int i=0;i<num;i++){
+            String str = s.substring(start+i*len,start+(i+1)*len);
+            if(!map.containsKey(str)) return false;
+            if(!words.containsKey(str))
+                words.put(str,0);
+            words.put(str,words.get(str)+1);
+            if(words.get(str)>map.get(str))
+                return false;
+        }
+        return true;
+    }
+    public ArrayList<Integer> findSubstring(String S, String[] L) {
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+        if(L==null||L.length==0) return ret;
+        int len = L[0].length();
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        for(String s : L){
+            if(!map.containsKey(s))
+                map.put(s,0);
+            map.put(s,map.get(s)+1);
+        }
+        for(int i=0;i<=S.length()-L.length*len;i++){
+            if(contains(S,i,len,L.length,map))
+                ret.add(i);
+        }
+        return ret;
+    }
+}
