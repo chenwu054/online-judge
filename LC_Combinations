@@ -22,7 +22,7 @@ public class Solution {
             return;
         }
         
-        for(int i=start;i<=n;i++){
+        for(int i=start;i<=n-(k-cur.size()-1);i++){
             ArrayList<Integer> newArr = new ArrayList<Integer>(cur);
             newArr.add(i);
             helper(n,i+1,k,newArr,ret);
