@@ -12,6 +12,9 @@ If n = 4 and k = 2, a solution is:
 ]
 
 */
+/*
+  recursive.
+*/
 public class Solution {
     public void helper(int n, int start,int k, ArrayList<Integer> cur,ArrayList<ArrayList<Integer>> ret){
         if(cur.size()==k){
