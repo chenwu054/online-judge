@@ -13,6 +13,32 @@ If n = 4 and k = 2, a solution is:
 
 */
 /*
+  iterative
+*/
+public class Solution {
+    public ArrayList<ArrayList<Integer>> combine(int n, int k) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+        for(int i=1;i<=n-(k-1);i++){
+            ret.add(new ArrayList<Integer>());
+            ret.get(i-1).add(i);
+        }
+        for(int i=1;i<k;i++){
+            int len = ret.size();
+            for(int j=0;j<len;j++){
+                ret.get(j).add(ret.get(j).get(i-1)+1);
+                for(int m=ret.get(j).get(i)+1;m<=n-(k-i-1);m++){
+                    ArrayList<Integer> newArr=new ArrayList<Integer>(ret.get(j));
+                    newArr.set(i,m);
+                    ret.add(newArr);
+                }
+            }
+        }   
+        return ret;
+    }
+}
+/*
   recursive.
 */
 public class Solution {
