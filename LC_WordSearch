@@ -1,0 +1,46 @@
+/*
+  Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+For example,
+Given board =
+
+[
+  ["ABCE"],
+  ["SFCS"],
+  ["ADEE"]
+]
+word = "ABCCED", -> returns true,
+word = "SEE", -> returns true,
+word = "ABCB", -> returns false.
+*/
+public class Solution {
+    private boolean containString(char[][] board,int i,int j, String word, int start,boolean[][] used){
+        if(word.length()==start)
+            return true;
+        if(i<0 || j<0||i>=board.length||j>=board[0].length||board[i][j]!=word.charAt(start)||used[i][j])
+            return false;
+        used[i][j]=true;
+        if(containString(board,i+1,j,word,start+1,used)) return true;
+        if(containString(board,i,j+1,word,start+1,used)) return true;
+        if(containString(board,i-1,j,word,start+1,used)) return true;
+        if(containString(board,i,j-1,word,start+1,used)) return true;
+        used[i][j]=false;
+        return false;
+        
+    }
+    public boolean exist(char[][] board, String word) {
+        if(board==null||board.length==0||word==null) return false;
+        if(word.length()==0) return true;
+        int n=board.length,m=board[0].length;
+        boolean[][] used= new boolean[n][m];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(containString(board,i,j,word,0,used))
+                    return true;
+            }
+        }
+        return false;
+    }
+}
