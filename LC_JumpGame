@@ -34,3 +34,23 @@ public class Solution {
         }
     }
 }
+/*
+  1
+*/
+public class Solution {
+    public boolean canJump(int[] A) {
+        if(A==null||A.length<2) return true;
+        int n = A.length,front = A[0],back=0;
+        while(true){
+            int temp = front;
+            while(back<n && back<=temp){
+                if(back+A[back]>front){
+                    front=back+A[back];
+                }
+                back++;
+            }
+            if(front>=n-1) return true;
+            if(temp==front) return false;
+        }
+    }
+}
