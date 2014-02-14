@@ -1,0 +1,47 @@
+/*
+Two elements of a binary search tree (BST) are swapped by mistake.
+
+Recover the tree without changing its structure.
+
+Note:
+A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
+confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on OJ.
+*/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void findError(TreeNode root,TreeNode[] prev,ArrayList<TreeNode> error){
+        if(root==null) return;
+        findError(root.left,prev,error);
+        if(prev[0]!=null){
+            if(root.val<prev[0].val){
+                if(error.size()==0){
+                    error.add(prev[0]);
+                    error.add(root);
+                }
+                else{
+                    error.set(1,root);
+                }
+            }
+        }
+        prev[0]=root;
+        findError(root.right,prev,error);
+    }
+    public void recoverTree(TreeNode root) {
+        ArrayList<TreeNode> error=new ArrayList<TreeNode>();
+        TreeNode[] prev=new TreeNode[1];
+        findError(root,prev,error);
+        if(error.size()>0){
+            int temp = error.get(0).val;
+            error.get(0).val=error.get(1).val;
+            error.get(1).val=temp;
+        }
+    }
+}
