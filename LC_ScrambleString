@@ -1,0 +1,85 @@
+/*
+
+Given a string s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively.
+
+Below is one possible representation of s1 = "great":
+
+    great
+   /    \
+  gr    eat
+ / \    /  \
+g   r  e   at
+           / \
+          a   t
+To scramble the string, we may choose any non-leaf node and swap its two children.
+
+For example, if we choose the node "gr" and swap its two children, it produces a scrambled string "rgeat".
+
+    rgeat
+   /    \
+  rg    eat
+ / \    /  \
+r   g  e   at
+           / \
+          a   t
+We say that "rgeat" is a scrambled string of "great".
+
+Similarly, if we continue to swap the children of nodes "eat" and "at", it produces a scrambled string "rgtae".
+
+    rgtae
+   /    \
+  rg    tae
+ / \    /  \
+r   g  ta  e
+       / \
+      t   a
+We say that "rgtae" is a scrambled string of "great".
+
+Given two strings s1 and s2 of the same length, determine if s2 is a scrambled string of s1.
+*/
+public class Solution {
+    private boolean mapEqual(Map<Character,Integer> m1, Map<Character,Integer> m2){
+        if(m1.size()!=m2.size()) return false;
+        for(Character ch : m1.keySet()){
+            if(m1.get(ch)!=m2.get(ch))
+                return false;
+        }
+        return true;
+    }
+    private boolean recursiveScramble(String s1, String s2){
+        if(s1.length()!=s2.length()) return false;
+        if(s1.length() == 1) return s1.equals(s2);
+        Map<Character, Integer> map = new HashMap<Character,Integer>();
+        Map<Character,Integer> forward = new HashMap<Character,Integer>();
+        Map<Character,Integer> backward=new HashMap<Character,Integer>();
+        int n=s1.length();
+        for(int i=0;i<s1.length()-1;i++){
+            char c1 = s2.charAt(i);
+            char c2 = s2.charAt(s2.length()-1-i);
+            if(!map.containsKey(s1.charAt(i)))
+                map.put(s1.charAt(i),0);
+            map.put(s1.charAt(i),1+map.get(s1.charAt(i)));
+            
+            if(!forward.containsKey(c1))
+                forward.put(c1,0);
+            forward.put(c1,1+forward.get(c1));
+            
+            if(!backward.containsKey(c2))
+                backward.put(c2,0);
+            backward.put(c2,1+backward.get(c2));
+            
+            if(map.equals(forward) && recursiveScramble(s1.substring(0,i+1),s2.substring(0,i+1)) && recursiveScramble(s1.substring(i+1,s1.length()),s2.substring(i+1,s2.length()))) return true;
+           
+            if(map.equals(backward) && recursiveScramble(s1.substring(0,i+1),s2.substring(n-i-1,s2.length())) && recursiveScramble(s1.substring(i+1,n),s2.substring(0,n-1-i))) return true;
+        
+        }
+        
+        return false;
+        
+    }
+    public boolean isScramble(String s1, String s2) {
+        if(s1==null && s2==null) return true;
+        if(s1==null ||s2==null || s1.length()!=s2.length()) return false;
+        return recursiveScramble(s1,s2);
+    }
+}
