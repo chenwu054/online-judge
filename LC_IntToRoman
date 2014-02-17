@@ -1,0 +1,37 @@
+/*
+Given an integer, convert it to a roman numeral.
+
+Input is guaranteed to be within the range from 1 to 3999.
+*/
+public class Solution {
+    static char[] ten = {'I','X','C','M'};
+    static char[] five={'V','L','D'};
+    public String intToRoman(int num) {
+        int[] n = new int[4];
+        for(int i=3,dig = 1000;i>=0;i--,dig/=10){
+            n[i]=num/dig;
+            num%=dig;
+        }
+        StringBuilder sb =new StringBuilder();
+        for(int i=3;i>=0;i--){
+            if(n[i]<4){
+                for(int k=0;k<n[i];k++){
+                    sb.append(ten[i]);
+                }
+            }
+            else if(n[i]==4){
+                sb.append(ten[i]).append(five[i]);
+            }
+            else if(n[i]==9){
+                sb.append(ten[i]).append(ten[i+1]);
+            }
+            else{
+                sb.append(five[i]);
+                for(int k=5;k<n[i];k++){
+                    sb.append(ten[i]);
+                }
+            }
+        }
+        return sb.toString();
+    }
+}
