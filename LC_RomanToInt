@@ -1,0 +1,40 @@
+/*
+Given a roman numeral, convert it to an integer.
+
+Input is guaranteed to be within the range from 1 to 3999.
+
+*/
+public class Solution {
+    static Map<Character,Integer> chart=new HashMap<Character,Integer>();
+    {
+        chart.put('I',1);
+        chart.put('V',5);
+        chart.put('X',10);
+        chart.put('L',50);
+        chart.put('C',100);
+        chart.put('D',500);
+        chart.put('M',1000);
+    }
+    public int romanToInt(String s) {
+        int tot=0,num=chart.get(s.charAt(0));
+        int last =num;
+        for(int i=1;i<s.length();i++){
+            int n = chart.get(s.charAt(i));
+            if(n==last){
+                num+=n;
+            }
+            else if(n<last){
+                last=n;
+                tot+=num;
+                num=n;
+            }
+            else{
+                tot-=num;
+                num=n;
+                last=n;
+            }
+        }
+        tot+=num;
+        return tot;
+    }
+}
