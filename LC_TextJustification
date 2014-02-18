@@ -1,0 +1,86 @@
+/*
+Given an array of words and a length L, format the text such that each line has exactly L characters and is fully (left and right) justified.
+
+You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces ' ' when necessary so that each line has exactly L characters.
+
+Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line do not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
+
+For the last line of text, it should be left justified and no extra space is inserted between words.
+
+For example,
+words: ["This", "is", "an", "example", "of", "text", "justification."]
+L: 16.
+
+Return the formatted lines as:
+[
+   "This    is    an",
+   "example  of text",
+   "justification.  "
+]
+Note: Each word is guaranteed not to exceed L in length.
+
+*/
+public class Solution {
+    public ArrayList<String> fullJustify(String[] words, int L) {
+        ArrayList<String> ret = new ArrayList<String>();
+        ArrayList<ArrayList<String>> lines= new ArrayList<ArrayList<String>>();
+        ArrayList<Integer> spaces = new ArrayList<Integer>();
+        int i=0;
+        //allocating words for each line.
+        while(i<words.length-1){
+            ArrayList<String> row = new ArrayList<String>();
+            row.add(words[i]);
+            int totLen=words[i++].length();
+            int actualLen=totLen;
+            while(i<words.length-1 && totLen+1+words[i].length()<=L){
+                totLen+=1+words[i].length();
+                actualLen+=words[i].length();
+                row.add(words[i++]);
+            }
+            lines.add(row);
+            spaces.add(L-actualLen);
+        }
+        int n=spaces.size();
+        String lastStr=words[words.length-1];
+        if(n>0 && spaces.get(n-1)>=(lines.get(n-1).size()+lastStr.length())){
+            lines.get(n-1).add(lastStr);
+            spaces.set(n-1,spaces.get(n-1)-lastStr.length());
+        }
+        else{
+            lines.add(new ArrayList<String>());
+            lines.get(lines.size()-1).add(lastStr);
+        }
+        //justifying.
+        for(i=0;i<lines.size()-1;i++){
+            StringBuilder sb = new StringBuilder();
+            ArrayList<String> line = lines.get(i);
+            n=spaces.get(i);
+            int std=line.size()>1?n/(line.size()-1):0;
+            n -=std*(line.size()-1);
+            sb.append(line.get(0));
+            for(int j=1;j<line.size();j++){
+                for(int k=0;k<std;k++)
+                    sb.append(' ');   
+                if(n>0){
+                    n--;
+                    sb.append(' ');
+                }
+                sb.append(line.get(j));
+            }
+            //in the case of one word per line
+            while(sb.length()<L)
+                sb.append(' ');
+            ret.add(sb.toString());
+        }
+        ArrayList<String> line = lines.get(lines.size()-1);
+        StringBuilder sb = new StringBuilder(line.get(0));
+        for(int j=1;j<line.size();j++)
+            sb.append(' ').append(line.get(j));
+            
+        while(sb.length()<L)
+            sb.append(' ');
+        
+        ret.add(sb.toString());
+        return ret;
+    }
+}
