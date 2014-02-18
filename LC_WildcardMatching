@@ -42,6 +42,7 @@ public class Solution {
         while(j<p.length()){
             if(p.charAt(j)!='*')
                 return false;
+            j++;
         }
         return true;
     }
