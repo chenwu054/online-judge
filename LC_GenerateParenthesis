@@ -5,6 +5,53 @@ For example, given n = 3, a solution set is:
 
 "((()))", "(()())", "(())()", "()(())", "()()()"
 */
+/*
+iterative
+*/
+public class Solution {
+    public ArrayList<String> generateParenthesis(int n) {
+        ArrayList<String> ret =new ArrayList<String>();
+        if(n<=0) return ret;
+        ArrayList<StringBuilder> list = new ArrayList<StringBuilder>();
+        ArrayList<Integer> left =new ArrayList<Integer>();
+        ArrayList<Integer> unmatched = new ArrayList<Integer>();
+        left.add(n-1);
+        unmatched.add(1);
+        list.add(new StringBuilder().append('('));
+        while(true){
+            boolean changed = false;
+            int len = list.size();
+            for(int i=0;i<len;i++){
+                if(left.get(i)>0 && unmatched.get(i)>0){
+                    StringBuilder sb = new StringBuilder().append(list.get(i)).append('(');
+                    list.add(sb);
+                    left.add(left.get(i)-1);
+                    unmatched.add(unmatched.get(i)+1);
+                    changed=true;
+                }
+                if(unmatched.get(i)>0){
+                    list.get(i).append(')');
+                    unmatched.set(i,unmatched.get(i)-1);
+                    changed=true;
+                }
+                else if(left.get(i)>0){
+                    list.get(i).append('(');
+                    left.set(i,left.get(i)-1);
+                    unmatched.set(i,1);
+                    changed=true;
+                }
+            }
+            if(!changed) break;
+        }
+        for(StringBuilder sb : list)
+            ret.add(sb.toString());
+        return ret;
+    }
+}
+
+/*
+  recursive
+*/
 public class Solution {
     
     private void generate(int left,int right, StringBuilder cur,ArrayList<String>col){
