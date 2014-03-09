@@ -10,19 +10,31 @@ Output: index1=1, index2=2
 */
 public class Solution {
     public int[] twoSum(int[] numbers, int target) {
-        // IMPORTANT: Please reset any member data you declared, as
-        // the same Solution instance will be reused for each test case.
         int[] ret ={-1,-1};
         if(numbers==null||numbers.length<2)
             return ret;
-        Map<Integer,Integer> map = new HashMap<Integer,Integer>();
-        for(int i=0;i<numbers.length;i++)
-            map.put(numbers[i],i);
+        Map<Integer,ArrayList<Integer>> map = new HashMap<Integer,ArrayList<Integer>>();
         for(int i=0;i<numbers.length;i++){
+            if(!map.containsKey(numbers[i])){
+                ArrayList<Integer> newA=new ArrayList<Integer>();
+                newA.add(i);
+                map.put(numbers[i],newA);
+            }
+            else{
+                map.get(numbers[i]).add(i);
+            }
             if(map.containsKey(target-numbers[i])){
-                ret[0]=i+1;
-                ret[1]=1+map.get(target-numbers[i]);
-                return ret;
+                if(target==2*numbers[i]){
+                    if(map.get(numbers[i]).size()<2) continue;
+                    ret[0]=map.get(numbers[i]).get(0)+1;
+                    ret[1]=map.get(numbers[i]).get(1)+1;
+                    return ret;
+                }
+                else{
+                    ret[0]=map.get(target-numbers[i]).get(0)+1;
+                    ret[1]=map.get(numbers[i]).get(0)+1;
+                    return ret;
+                }
             }
         }
         return ret;
