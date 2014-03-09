@@ -33,29 +33,20 @@ public static ArrayList<ArrayList<Integer>> subsets(int[] num) {
     }
     return ret;
 }
-public static ArrayList<ArrayList<Integer>> subsetsWithDup(int[] num) {
-    // Note: The Solution object is instantiated only once and is reused by each test case.
+public ArrayList<ArrayList<Integer>> subsetsWithDup(int[] num) {
     ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-    if(num==null||num.length==0)
-        return ret;
+    int len=0,lastLen=0;
     ret.add(new ArrayList<Integer>());
     Arrays.sort(num);
-    int length=0,lastLength=0;
     for(int i=0;i<num.length;i++){
-        length=ret.size();
-        if(i>0 && num[i]==num[i-1]){
-        	for(int j=lastLength;j<length;j++){
-        		ret.add(new ArrayList<Integer>(ret.get(j)));
-        		ret.get(ret.size()-1).add(num[i]);
-        	}
+        len=ret.size();
+        int j=(i>0&&num[i-1]==num[i])?lastLen:0;
+        for(;j<len;j++){
+            ArrayList<Integer> newArr= new ArrayList<Integer>(ret.get(j));
+            newArr.add(num[i]);
+            ret.add(newArr);
         }
-        else{
-        	for(int j=0;j<length;j++){
-        		ret.add(new ArrayList<Integer>(ret.get(j)));
-                ret.get(ret.size()-1).add(num[i]);           
-            }
-        }
-        lastLength=length;
+        lastLen=len;
     }
     return ret;
 }
