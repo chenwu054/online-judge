@@ -8,6 +8,7 @@ public class Solution {
         boolean neg = (dividend<0) ^ (divisor<0);
         dividend = dividend<0?dividend:-dividend;
         divisor = divisor<0?divisor:-divisor;
+        //ATTN: the equal sign
         while(dividend<=divisor){
             int i=1;
             while(dividend<=(divisor<<i) && (divisor<<i)<divisor) i++;
