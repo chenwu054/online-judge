@@ -1,0 +1,72 @@
+/**/
+public class Solution {
+    static class Line{
+		double slope,xOffset;
+		boolean vertical;
+		public Line(double s,double x){
+		    slope=s;
+		    xOffset=x;
+		    vertical =false;
+		}
+		public Line(double x){
+		    xOffset=x;
+		    slope = Double.MAX_VALUE;
+		    vertical =true;
+		}
+		public boolean equals(Object other){
+		    if(!(other instanceof Line))
+		        return false;
+		    Line o = (Line)other;
+		    if(o.vertical && this.vertical){
+		        return o.xOffset==this.xOffset;
+		    }
+		    else if(o.vertical || this.vertical)
+		        return false;
+		    else{
+		        return o.slope==this.slope && o.xOffset==this.xOffset;
+		    }
+		}
+		public int hashCode(){
+			if(vertical) return (int) (xOffset*17);
+			return (int) (xOffset*11+23*slope)+1;
+		}
+	}
+	
+    public int maxPoints(Point[] points) {
+        if(points==null) return 0;
+        if(points.length<2) return points.length;
+        Map<Line,Set<Integer>> map = new HashMap<Line,Set<Integer>>();
+        int max=0;
+        for(int i=0;i<points.length-1;i++){
+            for(int j=i+1;j<points.length;j++){
+                Point a = points[i];
+                Point b = points[j];
+                Line newLine=null;
+                double slope=0.0,offset=0.0;
+                if(a.x==b.x){
+                    newLine=new Line(a.x);
+                }
+                else{
+                    slope=((double)(b.y-a.y))/(b.x-a.x);
+                    offset=((double)(a.y*b.x-b.y*a.x))/(a.y-b.y);
+                    newLine=new Line(slope,offset);
+                }
+                if(map.containsKey(newLine)){
+                    map.get(newLine).add(i);
+                    map.get(newLine).add(j);
+                }
+                else{
+                    Set<Integer> newSet= new HashSet<Integer>();
+                    newSet.add(i);
+                    newSet.add(j);
+                    map.put(newLine,newSet);
+                }
+            }
+        }
+        for(Line l : map.keySet()){
+            if(map.get(l).size()>max)
+                max=map.get(l).size();
+        }
+        return max;
+    }
+}
