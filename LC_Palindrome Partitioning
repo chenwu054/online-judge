@@ -68,3 +68,39 @@ public class Solution {
         return ret;
     }
 }
+
+
+/*
+  dfs
+*/
+public void dfs(boolean[][] isPalin, String s, int start, ArrayList<String> cur, ArrayList<ArrayList<String>> ret){
+    if(start==s.length()){
+        ret.add(cur);
+        return;
+    }
+    for(int i=start;i<s.length();i++){
+        if(isPalin[start][i]){
+            ArrayList<String> next=new ArrayList<String>(cur);    
+            next.add(s.substring(start,i+1));
+            dfs(isPalin,s,i+1,next,ret);
+        }
+    }
+}
+public ArrayList<ArrayList<String>> partition(String s) {
+    ArrayList<ArrayList<String>> ret =new ArrayList<ArrayList<String>>();
+    int n=s.length();
+    boolean[][] isPalin=new boolean[n][n];
+    for(int len=0;len<n;len++){
+        for(int i=0;i<n-len;i++){
+            if(len==0)
+                isPalin[i][i+len]=true;
+            else if(len==1)
+                isPalin[i][i+len]=s.charAt(i)==s.charAt(i+len);
+            else{
+                isPalin[i][i+len]=(s.charAt(i)==s.charAt(i+len) && isPalin[i+1][i+len-1]);
+            }
+        }
+    }
+    dfs(isPalin,s,0,new ArrayList<String>(),ret);
+    return ret;
+}
