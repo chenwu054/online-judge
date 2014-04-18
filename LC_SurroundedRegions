@@ -62,3 +62,80 @@ public class Solution {
     }
     
 }
+
+/*
+    bfs
+*/
+public class Solution {
+    static char dye ='M';
+    static class Pos{
+        int x,y;
+        public Pos(int x, int y){
+            this.x=x;
+            this.y=y;
+        }
+    }
+    public boolean valid(int x, int y, int n, int m){
+        return !(x<0||y<0||x>=n||y>=m);
+    }
+    public void solve(char[][] board) {
+        if(board==null||board.length==0) return;
+        int n=board.length,m=board[0].length;
+        Queue<Pos> q = new LinkedList<Pos>();
+        for(int i=0;i<n;i++){
+            if(board[i][0]=='O'){
+                Pos newPos= new Pos(i,0);
+                q.offer(newPos);
+            }
+            if(board[i][m-1]=='O'){
+                Pos newPos = new Pos(i,m-1);
+                q.offer(newPos);
+            }
+        }
+        for(int j=0;j<m;j++){
+            if(board[0][j]=='O'){
+                Pos newPos = new Pos(0,j);
+                q.offer(newPos);
+            }
+            if(board[n-1][j]=='O'){
+                Pos newPos = new Pos(n-1,j);
+                q.offer(newPos);
+            }
+        }
+        int x=0,y=0;
+        while(q.size()>0){
+            Pos cur = q.poll();
+            x=cur.x;
+            y=cur.y;
+            board[x][y]=dye;
+            if(valid(x-1,y,n,m) && board[x-1][y]=='O'){
+                Pos newPos = new Pos(x-1,y);
+                q.offer(newPos);
+            }
+            if(valid(x,y-1,n,m) && board[x][y-1]=='O'){
+                Pos newPos = new Pos(x,y-1);
+                q.offer(newPos);
+            }
+            if(valid(x+1,y,n,m) && board[x+1][y]=='O'){
+                Pos newPos = new Pos(x+1,y);
+                q.offer(newPos);
+            }
+            if(valid(x,y+1,n,m) && board[x][y+1]=='O'){
+                Pos newPos = new Pos(x,y+1);
+                q.offer(newPos);
+            }
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(board[i][j]=='O')
+                    board[i][j]='X';
+            }
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(board[i][j]==dye)
+                    board[i][j]='O';
+            }
+        }
+    }
+}
