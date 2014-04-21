@@ -61,3 +61,50 @@ public class Solution {
         
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+public ListNode reverse(ListNode head){
+  if(head==null || head.next==null) return head;
+  ListNode last=null,cur=head,next=head.next;
+  while(next!=null){
+      cur.next=last;
+      last=cur;
+      cur=next;
+      next=next.next;
+  }
+  cur.next=last;
+  return cur;
+}
+public void reorderList(ListNode head) {
+  if(head==null || head.next==null) return;
+  ListNode slow=head,fast=head.next;
+  while(true){
+      fast=fast.next;
+      if(fast==null||fast.next==null) break;
+      fast=fast.next;
+      slow=slow.next;
+  }
+  ListNode secondHalf=slow.next;
+  slow.next=null;
+  ListNode newHead=reverse(secondHalf);
+  ListNode n1=head,n2=newHead,node=n1;
+  while(true){
+      n1=n1.next;
+      node.next=n2;
+      n2=n2.next;
+      node=node.next;
+      if(n1==null) break;
+      node.next=n1;
+      node=node.next;
+  }
+  
+}
