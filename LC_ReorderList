@@ -93,10 +93,13 @@ public void reorderList(ListNode head) {
       fast=fast.next;
       slow=slow.next;
   }
+  //slow is the node before mid point
   ListNode secondHalf=slow.next;
   slow.next=null;
   ListNode newHead=reverse(secondHalf);
   ListNode n1=head,n2=newHead,node=n1;
+  //in the case that there are odd number of nodes, n2 has one more node than n1, 
+  //therefore, check if n1 is null to proceed to the next step. otherwise, n2 keeps the current list.
   while(true){
       n1=n1.next;
       node.next=n2;
