@@ -19,36 +19,27 @@
  * }
  */
 public class Solution {
-    private TreeNode convert(ListNode[] current, int start, int end){
-        if(start>end)
-            return null;
-        if(start==end){
-            TreeNode newNode=new TreeNode(current[0].val);
-            current[0]=current[0].next;
-            return newNode;
-        }
-        int mid = start+(end-start)/2;
-        TreeNode left=convert(current,start,mid-1);
-        TreeNode root= new TreeNode(current[0].val);
-        current[0]=current[0].next;
-        TreeNode right=convert(current,mid+1,end);
-        root.left=left;
-        root.right=right;
-        return root;
-    }
-    public TreeNode sortedListToBST(ListNode head) {
-        // IMPORTANT: Please reset any member data you declared, as
-        // the same Solution instance will be reused for each test case.
-        if(head==null)
-            return null;
-        ListNode node = head;
-        int len=0;
-        while(node!=null){
-            len++;
-            node=node.next;
-        }
-        ListNode[] current = new ListNode[1];
-        current[0]=head;
-        return convert(current,1,len);
-    }
+  public TreeNode convertBST(int left,ListNode[] last){
+      if(left<=0) return null;
+      int mid = left/2+1;
+      TreeNode leftNode = convertBST(mid-1,last);
+      TreeNode root = new TreeNode(last[0].val);
+      last[0]=last[0].next;
+      TreeNode rightNode =convertBST(left-mid,last);
+      root.left=leftNode;
+      root.right=rightNode;
+      return root;
+  }
+  public TreeNode sortedListToBST(ListNode head) {
+      if(head==null) return null;
+      int num = 0;
+      ListNode cur = head;
+      while(cur!=null){
+          num++;
+          cur=cur.next;
+      }
+      ListNode[] last = new ListNode[1];
+      last[0]=head;
+      return convertBST(num,last);
+  }
 }
