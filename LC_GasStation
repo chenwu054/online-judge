@@ -25,6 +25,7 @@ public class Solution {
           while(netGas>=0 && front<2*n){
               netGas+=doubleGas[front];
               netGas-=doubleCost[front++];
+              //NOTE: front-back-1==n, not front -back==n
               if(front-back-1==n && netGas>=0) return back;
           }    
               
