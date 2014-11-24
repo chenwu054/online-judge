@@ -1,0 +1,53 @@
+/*
+Given an array of integers and a number k, find k non-overlapping subarrays which have the largest sum.
+
+The number in each subarray should be contiguous.
+
+Return the largest sum.
+
+Note
+The subarray should contain at least one number
+*/
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @param k: An integer denote to find k non-overlapping subarrays
+     * @return: An integer denote the sum of max k non-overlapping subarrays
+     */
+    public int maxSubArray(ArrayList<Integer> nums, int k) {
+        // write your code
+        int n = nums.size();
+        int[][] maxSub = new int[n][n];
+        for(int i=0;i<n;i++){
+            maxSub[i][i]=nums.get(i);
+        }
+        for(int len=1;len<n;len++){
+            for(int i=0;i<n-len;i++){
+                int tempMax = Integer.MIN_VALUE;
+                int temp = 0;
+                for(int j=i+len;j>=i;j--){
+                    temp += nums.get(j);
+                    if(temp>tempMax)
+                        tempMax=temp;
+                }
+                maxSub[i][i+len] = Math.max(maxSub[i][i+len-1],tempMax);
+            }
+        }
+        int[] max = {Integer.MIN_VALUE};
+        recursiveMaxSubarray(maxSub,0,k,0,max);
+        return max[0];
+    }
+    public void recursiveMaxSubarray(int[][] maxSub, int start, int k,int sum, int[] max){
+        if(k==0){
+            if(sum>max[0])
+                max[0]=sum;
+            return;
+        }
+        if(start>=maxSub.length)
+            return;
+        for(int i=start;i<maxSub.length-k+1;i++){
+            recursiveMaxSubarray(maxSub,i+1,k-1,sum+maxSub[start][i],max);
+        }
+    }
+}
+
