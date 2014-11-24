@@ -1,0 +1,51 @@
+/*
+  Fair Minimum Adjustment Cost Show Result My Submissions
+Given an integer array, adjust each integers so that the difference of every adjcent integers are not greater than a given number target.
+
+If the array before adjustment is A, the array after adjustment is B, you should minimize the sum of |A[i]-B[i]| 
+
+Note
+You can assume each number in the array is a positive integer and not greater than 100
+
+Example
+Given [1,4,2,3] and target=1, one of the solutions is [2,3,2,3], the adjustment cost is 2 and it's minimal. Return 2.
+*/
+public class Solution {
+    /**
+     * @param A: An integer array.
+     * @param target: An integer.
+     */
+    public int MinAdjustmentCost(ArrayList<Integer> A, int target) {
+        // write your code here
+        int[] num = new int[101];
+        int[] minCost=new int[101];
+        for(int i=0;i<=100;i++){
+            num[i]=i;
+            minCost[i]=Math.abs(i-A.get(0));
+        }
+        int[] tempMinCost=new int[101];
+        for(int i=1;i<A.size();i++){
+            int cur = A.get(i);
+            //Arrays.fill(tempMinCost,Integer.MAX_VALUE);
+            for(int j=0;j<num.length;j++){
+                int cost = Integer.MAX_VALUE;
+                for(int k=-target;k<=target;k++){
+                    if(j+k>100 || j+k<0) continue;
+                    if(minCost[j+k]+Math.abs(j-cur)<cost){
+                        cost=minCost[j+k]+Math.abs(j-cur);
+                    }
+                }
+                tempMinCost[j]=cost;
+            }
+            for(int k=0;k<minCost.length;k++){
+                minCost[k]=tempMinCost[k];
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        for(int i=0;i<minCost.length;i++){
+            if(min>minCost[i])
+                min=minCost[i];
+        }
+        return min;
+    }
+}
