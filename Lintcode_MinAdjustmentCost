@@ -17,20 +17,21 @@ public class Solution {
      */
     public int MinAdjustmentCost(ArrayList<Integer> A, int target) {
         // write your code here
-        int[] num = new int[101];
-        int[] minCost=new int[101];
-        for(int i=0;i<=100;i++){
+        int range=100;
+        int[] num = new int[range+1];
+        int[] minCost=new int[range+1];
+        for(int i=0;i<=range;i++){
             num[i]=i;
             minCost[i]=Math.abs(i-A.get(0));
         }
-        int[] tempMinCost=new int[101];
+        int[] tempMinCost=new int[range+1];
         for(int i=1;i<A.size();i++){
             int cur = A.get(i);
             //Arrays.fill(tempMinCost,Integer.MAX_VALUE);
             for(int j=0;j<num.length;j++){
                 int cost = Integer.MAX_VALUE;
                 for(int k=-target;k<=target;k++){
-                    if(j+k>100 || j+k<0) continue;
+                    if(j+k>range || j+k<0) continue;
                     if(minCost[j+k]+Math.abs(j-cur)<cost){
                         cost=minCost[j+k]+Math.abs(j-cur);
                     }
