@@ -1,0 +1,43 @@
+/*
+Given an array of integers, find two non-overlapping subarrays which have the largest sum.
+
+The number in each subarray should be contiguous.
+
+Return the largest sum.
+
+Note
+The subarray should contain at least one number
+
+Example
+For given [1, 3, -1, 2, -1, 2], the two subarrays are [1, 3] and [2, -1, 2] or [1, 3, -1, 2] and [2], they both have the largest sum 7.
+
+Challenge Expand 
+*/
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: An integer denotes the sum of max two non-overlapping subarrays
+     */
+    public int maxTwoSubArrays(ArrayList<Integer> nums) {
+        // write your code
+        int n = nums.size();
+        int[] forwardMax = new int[n], backwardMax= new int[n];
+        int fVal = nums.get(0),bVal=nums.get(n-1);
+        forwardMax[0]=fVal;
+        backwardMax[n-1]=bVal;
+        int i=1;
+        while(i<n){
+            fVal = (fVal>0?fVal:0)+nums.get(i);
+            bVal=(bVal>0?bVal:0)+nums.get(n-1-i);
+            forwardMax[i]=Math.max(forwardMax[i-1],fVal);
+            backwardMax[n-1-i]=Math.max(backwardMax[n-i],bVal);
+            i++;
+        }
+        int max=Integer.MIN_VALUE;
+        for(i=0;i<n-1;i++){
+            if(forwardMax[i]+backwardMax[i+1]>max)
+                max=forwardMax[i]+backwardMax[i+1];
+        }
+        return max;
+    }
+}
