@@ -14,69 +14,30 @@ public class Solution {
      * @param k: An integer denote to find k non-overlapping subarrays
      * @return: An integer denote the sum of max k non-overlapping subarrays
      */
-    public int maxSubArray(ArrayList<Integer> nums, int k) {
+    public static int maxSubArray(ArrayList<Integer> nums, int k) {
         // write your code
-        int n = nums.size();
-        int[][] maxSub = new int[n][n];
-        for(int i=0;i<n;i++){
-            maxSub[i][i]=nums.get(i);
-        }
-        for(int len=1;len<n;len++){
-            for(int i=0;i<n-len;i++){
-                int tempMax = Integer.MIN_VALUE;
-                int temp = 0;
-                for(int j=i+len;j>=i;j--){
-                    temp += nums.get(j);
-                    if(temp>tempMax)
-                        tempMax=temp;
-                }
-                maxSub[i][i+len] = Math.max(maxSub[i][i+len-1],tempMax);
+       int n = nums.size();
+       int[][] put = new int[k][n];
+       int[][] noput=new int[k][n];
+       int val = 0;
+       put[0][0] = nums.get(0);
+       noput[0][0]=Integer.MIN_VALUE;//!!
+       for(int i =1;i<n;i++){
+           put[0][i]=Math.max(put[0][i-1]+nums.get(i), nums.get(i));
+           noput[0][i]=Math.max(put[0][i-1],noput[0][i-1]);
+       }
+       for(int i=1;i<k;i++){
+           put[i][i]=put[i-1][i-1]+nums.get(i);
+           noput[i][i]=Integer.MIN_VALUE;//!!NOT put[i-1][i-1];
+       }
+       for(int i=1;i<k;i++){
+            for(int j=i+1;j<n;j++){
+                //int max = Math.max(put[i-1][j-1],put[i][j-1]);
+                put[i][j]=Math.max(Math.max(put[i-1][j-1],put[i][j-1]),noput[i-1][j-1]) + nums.get(j);
+                noput[i][j]=Math.max(put[i][j-1],noput[i][j-1]);
             }
-        }
-        int[] max = {Integer.MIN_VALUE};
-        recursiveMaxSubarray(maxSub,0,k,0,max);
-        return max[0];
-    }
-    public void recursiveMaxSubarray(int[][] maxSub, int start, int k,int sum, int[] max){
-        if(k==0){
-            if(sum>max[0])
-                max[0]=sum;
-            return;
-        }
-        if(start>=maxSub.length)
-            return;
-        for(int i=start;i<maxSub.length-k+1;i++){
-            recursiveMaxSubarray(maxSub,i+1,k-1,sum+maxSub[start][i],max);
-        }
-    }
-}
-
-public class Solution {
-    /**
-     * @param nums: A list of integers
-     * @param k: An integer denote to find k non-overlapping subarrays
-     * @return: An integer denote the sum of max k non-overlapping subarrays
-     */
-    public int maxSubArray(ArrayList<Integer> nums, int k) {
-        // write your code
-        int n = nums.size();
-        int[] max = {Integer.MIN_VALUE};
-        recursiveMaxSubarray(nums,0,k,0,max);
-        return max[0];
-    }
-    public void recursiveMaxSubarray(ArrayList<Integer> num, int start, int k,int sum, int[] max){
-        if(k==0){
-            if(sum>max[0])
-                max[0]=sum;
-            return;
-        }
-        if(start>=num.size())
-            return;
-        int val = 0;
-        for(int i=start;i<num.size()-k+1;i++){
-            val=(val>0?val:0)+num.get(i); 
-            recursiveMaxSubarray(num,i+1,k-1,sum+val,max);
-        }
+       }
+       return Math.max(put[k-1][n-1],noput[k-1][n-1]);
     }
 }
 
