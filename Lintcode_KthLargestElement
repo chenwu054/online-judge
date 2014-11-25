@@ -1,0 +1,68 @@
+/*
+Find K-th largest element in an array.
+
+Note
+You can swap elements in the array
+
+Example
+In array [9,3,2,4,8], the 3th largest element is 4
+*/
+class Solution {
+    //param k : description of k
+    //param numbers : array of numbers
+    //return: description of return
+    public int kthLargestElement(int k, ArrayList<Integer> numbers) {
+        // write your code here
+        numbers.add(0,0);
+        for(int i=2;i<=k;i++){
+            percolateUp(numbers,i);
+        }
+        for(int i=k+1;i<numbers.size();i++){
+            percolateDown(numbers,k,i);
+        }
+        int min = numbers.get(1);
+        int i=2;
+        while(i<=k){
+            if(numbers.get(i)<min){
+                min=numbers.get(i);
+            }
+            i++;
+        }
+        return min;
+    }
+    public void percolateDown(ArrayList<Integer>num, int k, int start){
+        if(start>=num.size()) return;
+        if(num.get(start)>num.get(1)){
+            int temp = num.get(1);
+            num.set(1,num.get(start));
+            num.set(start,temp);
+            int idx=1;
+            while(idx<=k/2){
+                int next = idx*2;
+                if(next+1<=k &&  num.get(next+1)<num.get(next))
+                    next++;
+                if(num.get(idx)>num.get(next)){
+                    temp = num.get(idx);
+                    num.set(idx,num.get(next));
+                    num.set(next,temp);
+                    idx=next;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    public void percolateUp(ArrayList<Integer> num, int start){
+        if(start<1) return;
+        while(start>1){
+            if(num.get(start)<num.get(start/2)){
+                int temp = num.get(start);
+                num.set(start,num.get(start/2));
+                num.set(start/2,temp);
+                start=start/2;
+            }
+            else
+                break;
+        }
+    }
+};
