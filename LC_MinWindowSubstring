@@ -13,6 +13,54 @@ If there are multiple such windows, you are guaranteed that there will always be
 */
 public class Solution {
     public String minWindow(String S, String T) {
+        if(T==null || T.length()==0) return "";
+        Map<Character,Integer> t = new HashMap<Character,Integer>();
+        Map<Character,Integer> s = new HashMap<Character,Integer>();
+        for(int i=0;i<T.length();i++){
+            char c = T.charAt(i);
+            if(!t.containsKey(c)){
+                t.put(c,1);
+                s.put(c,0);
+            }
+            else
+                t.put(c,t.get(c)+1);
+        }
+        int front =0,back=0,minLength = S.length()+1,start=-1;
+        int len = 0;
+        while(front<S.length()){
+            while(front<S.length() && len<t.size()){
+                char c = S.charAt(front);
+                if(s.containsKey(c)){
+                    s.put(c,s.get(c)+1);
+                    if(s.get(c).equals(t.get(c))){
+                        len++;
+                    }
+                }
+                front++;
+            }
+            
+            while(back<front&&len == t.size()){
+                char c = S.charAt(back);
+                back++;
+                if(s.get(c)==null) 
+                    continue;
+                if(s.get(c).equals(t.get(c))){
+                    len--;
+                    //s.put(c,s.get(c)-1);
+                    if(minLength>front-back+1){
+                        minLength=front-back+1;
+                        start=back-1;
+                    }
+                }
+                s.put(c,s.get(c)-1);
+            }
+        }
+        return start==-1?"":S.substring(start,start+minLength);
+    }
+}
+
+public class Solution {
+    public String minWindow(String S, String T) {
         if(S==null||S.length()==0||T==null||T.length()==0) return "";
         Map<Character,Integer> t= new HashMap<Character,Integer>();
         Map<Character,Integer> s = new HashMap<Character,Integer>();
