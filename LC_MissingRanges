@@ -1,0 +1,33 @@
+/*
+    Given a sorted integer array where the range of elements are [0, 99] inclusive, return its missing ranges
+*/
+public  ArrayList<String> missingRanges(int[] vals){
+    int start=0;
+    int end=0;
+    int i=0;
+    ArrayList<String> ret = new ArrayList<String>();
+    while(i<vals.length){
+        if(vals[i]==start){
+            i++;
+            start++;
+        }
+        else{
+            end = vals[i]-1;
+            if(start==end){
+                ret.add(""+start);
+            }
+            else{
+                ret.add(start + "->"+end);
+            }
+            start=vals[i]+1;
+            i++;
+        }
+    }
+    if(start<99){
+        ret.add(start+"->99");
+    }
+    else if(start==99){
+        ret.add(start+"");
+    }
+    return ret;
+}
