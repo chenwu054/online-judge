@@ -5,6 +5,38 @@ For example, given [3, 30, 34, 5, 9], the largest formed number is 9534330.
 
 Note: The result may be very large, so you need to return a string instead of an integer.
 */
+//use string
+public class Solution {
+    class NumberComparator implements Comparator<String>{
+        public int compare(String a, String b ){
+            String ab = a+b;
+            String ba = b+a;
+            int res = ab.compareTo(ba);
+            if(res==0)
+                return 0;
+            else{
+                return res>0?-1:1;
+            }
+        }
+    } 
+    public String largestNumber(int[] num) {
+        ArrayList<String> n = new ArrayList<String>();
+        for(int i=0;i<num.length;i++){
+            n.add(""+num[i]);
+        }
+        Collections.sort(n, new NumberComparator());
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<n.size();i++){
+            sb.append(n.get(i));
+        }
+        int start = 0;
+        while(start<sb.length() && sb.charAt(start)=='0'){
+            start++;
+        }
+        return sb.substring(Math.min(sb.length()-1,start)).toString();
+    }
+}
+// use long 
 public class Solution {
     class NumberComparator implements Comparator<Long>{
         public int compare(Long a, Long b){
