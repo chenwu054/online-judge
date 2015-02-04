@@ -1,0 +1,105 @@
+/*
+did not pass
+Given a (decimal - e g  3.72) number that is passed in as a string,return the binary representation that is passed in as a string.If the number can not be represented accurately in binary, print “ERROR”
+
+Example
+n = 3.72, return ERROR
+
+n = 3.5, return 11.1
+*/
+public class Solution {
+    /**
+     *@param n: Given a decimal number that is passed in as a string
+     *@return: A string
+     */
+    public String binaryRepresentation(String n) {
+        // write your code here
+        int dotPos = -1;
+        int i=0;
+        while(i<n.length()){
+            if(n.charAt(i)=='.'){
+                dotPos=i;
+                break;
+            }
+            i++;
+        }
+        if(dotPos==-1)
+            dotPos=n.length();
+        String decimal = parseDecimal(n.substring(0,dotPos));
+        String fraction = "";
+        if(dotPos>=0 && dotPos<n.length()-1){
+            fraction = parseFraction(n.substring(dotPos+1,n.length()));
+            if(fraction==null){
+                return "ERROR";
+            }
+            if(fraction.length()>0)
+                return decimal+"."+fraction;
+            else 
+                return decimal;
+        }
+        return decimal;
+    }
+    public String parseDecimal(String str){
+        int n = str.length();
+        int[] a = new int[n];
+        for(int i=0;i<n;i++){
+            a[i]=str.charAt(i)-'0';
+        }
+        StringBuilder sb = new StringBuilder();
+        int start = 0;
+        while(start<n){
+            while(start<n && a[start]==0){
+                start++;
+            }
+            if(start==n)
+                break;
+            sb.append(a[n-1]%2);
+            int carry = 0;
+            int  tot = 0;
+            for(int i=start;i<n;i++){
+                tot = carry* 10 + a[i];
+                carry = tot %2;
+                a[i]=tot/2;
+            }
+        }
+        while(sb.length()>0 && sb.charAt(sb.length()-1)=='0'){
+            sb.deleteCharAt(sb.length()-1);
+        }
+        sb.reverse();
+        if(sb.length()==0){
+            return "0";
+        }
+        return sb.toString();
+    }
+    public String parseFraction(String str){
+        if(str==null) return null;
+        if(str.length()==0) return "";
+        int n = str.length();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i]=str.charAt(i)-'0';
+        }
+        StringBuilder sb = new StringBuilder();
+        int start = n-1;
+        while(start>=0){
+            while(start>=0 && arr[start]==0){
+                start--;
+            }
+            if(start<0)
+                break;
+            if(arr[start]!=5)
+                return null;
+            int carry = 0, tot= 0;
+            for(int i=start;i>=0;i--){
+                tot =carry + arr[i]*2;
+                carry =tot/10;
+                arr[i]= tot%10;
+            }
+            sb.append(carry);
+        }
+        while(sb.length()>0 && sb.charAt(sb.length()-1)=='0'){
+            sb.deleteCharAt(sb.length()-1);
+        }
+        return sb.toString();
+    }
+}
