@@ -1,0 +1,78 @@
+/*
+  Given an integer array with no duplicates. A max tree building on this array is defined as follow:
+
+The root is the maximum number in the array
+The left subtree and right subtree are the max trees of the subarray divided by the root number.
+Construct the max tree by the given array.
+Example
+Given [2, 5, 6, 0, 3, 1], the max tree is
+
+              6
+
+            /    \
+
+         5       3
+
+       /        /   \
+
+     2        0     1
+
+
+
+
+
+Challenge
+O(n) time complexity
+*/
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param A: Given an integer array with no duplicates.
+     * @return: The root of max tree.
+     */
+    public TreeNode maxTree(int[] a) {
+        // write your code here
+        if(a==null || a.length==0){
+            return null;
+        }
+        Stack<TreeNode> s = new Stack<TreeNode>();
+        TreeNode node = new TreeNode(a[0]);
+        s.push(node);
+        int i = 1;
+        TreeNode last =null, cur =null;
+        while(i<a.length){
+            last = s.peek();
+            cur = new TreeNode(a[i]);
+            if(cur.val > last.val){
+                last=s.pop();
+                while(s.size()>0 && s.peek().val < cur.val){
+                    s.peek().right = last;
+                    
+                    last=s.pop();
+                }
+                cur.left=last;
+                s.push(cur);
+            }
+            else{
+                s.push(cur);
+            }
+            i++;
+        }
+        last=s.pop();
+        while(s.size()>0){
+            s.peek().right = last;
+            last=s.pop();
+        }
+        return last;
+    }
+}
