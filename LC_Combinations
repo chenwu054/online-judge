@@ -15,6 +15,29 @@ If n = 4 and k = 2, a solution is:
 /*
   iterative
 */
+public List<List<Integer>> combine(int n, int k) {
+		// write your code here
+		List<List<Integer>> ret = new ArrayList<List<Integer>>();
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+	   while(list.size()>0){
+	        int last = list.get(list.size()-1)+1;
+	        int j = 0;
+	        while(list.size()<k){
+	            list.add(j+last);
+	            j++;
+	        }
+	        ret.add(new ArrayList<Integer>(list));
+	        while(list.size()>0 && list.get(list.size()-1) == n - (k-list.size())){
+	            list.remove(list.size()-1);
+	        }
+	        if(list.size()>0){
+	            Integer increase=list.remove(list.size()-1);
+	            list.add(increase+1);
+	        }
+	    }
+		return ret;
+    }
 public class Solution {
     public ArrayList<ArrayList<Integer>> combine(int n, int k) {
         // IMPORTANT: Please reset any member data you declared, as
