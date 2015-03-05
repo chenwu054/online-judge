@@ -27,23 +27,23 @@ public class Solution {
         // Start typing your Java solution below
         // DO NOT write main() function
         boolean neg= (dividend<0)^(divisor<0);
-		dividend=dividend==Integer.MIN_VALUE?Integer.MIN_VALUE:(-1)*Math.abs(dividend);
-		divisor=divisor==Integer.MIN_VALUE?Integer.MIN_VALUE:(-1)*Math.abs(divisor);
-		if(divisor==dividend)
-			return neg?-1:1;
-		if(divisor==-1)
-			return neg?dividend:Math.abs(dividend);
-		int ret=0;
-		while(dividend<=divisor){
-			int temp=1;
-			int div=divisor;
-			while(dividend-(div<<1)<divisor){
-				temp = temp<<1;
-				div =div<<1;
-			}
-			ret+=temp;
-			dividend-=div;
+	dividend=dividend==Integer.MIN_VALUE?Integer.MIN_VALUE:(-1)*Math.abs(dividend);
+	divisor=divisor==Integer.MIN_VALUE?Integer.MIN_VALUE:(-1)*Math.abs(divisor);
+	if(divisor==dividend)
+		return neg?-1:1;
+	if(divisor==-1)
+		return neg?dividend:Math.abs(dividend);
+	int ret=0;
+	while(dividend<=divisor){
+		int temp=1;
+		int div=divisor;
+		while(dividend-(div<<1)<divisor){
+			temp = temp<<1;
+			div =div<<1;
 		}
-		return neg?(-1)*ret:ret;
+		ret+=temp;
+		dividend-=div;
+	}
+	return neg?(-1)*ret:ret;
     }
 }
