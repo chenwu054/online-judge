@@ -1,0 +1,66 @@
+/*
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+Example 1:
+
+11110
+11010
+11000
+00000
+
+Answer: 1
+
+Example 2:
+
+11000
+11000
+00100
+00011
+
+Answer: 3
+*/
+public class Solution {
+  public int numIslands(char[][] grid) {
+      if(grid==null||grid.length==0) return 0;
+      int num=0,n=grid.length,m=grid[0].length;
+      boolean[][]visited=new boolean[n][m];
+      Queue<Integer> xq = new LinkedList<Integer>();
+      Queue<Integer> yq =new LinkedList<Integer>();
+      int x=0,y=0;
+      for(int i=0;i<n;i++){
+          for(int j=0;j<m;j++){
+              if(!visited[i][j] && grid[i][j]=='1'){
+                  num++;
+                  xq.add(i);
+                  yq.add(j);
+                  visited[i][j]=true;
+                  while(xq.size()>0){
+                      x=xq.poll();
+                      y=yq.poll();
+                      if(x>0 && !visited[x-1][y] && grid[x-1][y]=='1'){
+                          visited[x-1][y]=true;
+                          xq.add(x-1);
+                          yq.add(y);
+                      }
+                      if(x<n-1 && !visited[x+1][y] && grid[x+1][y]=='1'){
+                          visited[x+1][y]=true;
+                          xq.add(x+1);
+                          yq.add(y);
+                      }
+                      if(y>0 && !visited[x][y-1] && grid[x][y-1]=='1'){
+                          visited[x][y-1]=true;
+                          xq.add(x);
+                          yq.add(y-1);
+                      }
+                      if(y<m-1 && !visited[x][y+1] && grid[x][y+1]=='1'){
+                          visited[x][y+1]=true;
+                          xq.add(x);
+                          yq.add(y+1);
+                      }
+                  }
+              }
+          }
+      }
+      return num;
+  }
+}
