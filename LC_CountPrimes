@@ -1,0 +1,20 @@
+/*
+Description:
+Count the number of prime numbers less than a non-negative number, n
+*/
+public class Solution {
+    public int countPrimes(int n) {
+        int[] bitmap = new int[1+(n>>5)];
+        int count=0;
+        for(int i=2;i<n;i++){
+            int mask = bitmap[(i-1)/32] & (1<<((i-1)%32));
+            if(mask==0){
+                count++;
+                for(int j=1;j*i<n;j++){
+                    bitmap[(i*j-1)/32] |= (1<<((j*i-1)%32));
+                }
+            }
+        }
+        return count;
+    }
+}
