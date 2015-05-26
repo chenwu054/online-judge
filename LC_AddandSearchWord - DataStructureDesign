@@ -1,0 +1,88 @@
+/*
+Design a data structure that supports the following two operations:
+
+void addWord(word)
+bool search(word)
+search(word) can search a literal word or a regular expression string containing only letters a-z or .. A . means it can represent any one letter.
+
+For example:
+
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+Note:
+You may assume that all words are consist of lowercase letters a-z.
+*/
+public class WordDictionary {
+    class TrieNode{
+        boolean isWord;
+        TrieNode[] next;
+        public TrieNode(){
+            isWord=false;
+            next=new TrieNode[26];
+        }
+    }
+    public TrieNode root;
+    public WordDictionary(){
+        root=new TrieNode();
+        root.isWord=false;
+        
+    }
+    // public void addWord(TrieNode root,String str, int start){
+    //     if(start==str.length()){
+    //         root.isWord=true;
+    //         return;
+    //     }
+    //     if(root.next[str.charAt(start)-'a']==null){
+    //         root.next[str.charAt(start)-'a']=new TrieNode();
+    //     }
+    //     addWord(root.next[str.charAt(start)-'a'],str,start+1);
+    // }
+    // Adds a word into the data structure.
+    public void addWord(String word) {
+        if(word==null||word.length()==0) return;
+        TrieNode node= root;
+        int i=0;
+        while(i<word.length()){
+            if(node.next[word.charAt(i)-'a']==null){
+                node.next[word.charAt(i)-'a']=new TrieNode();
+            }
+            node=node.next[word.charAt(i)-'a'];
+            i++;
+        }
+        node.isWord=true;
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    public boolean search(String word) {
+        if(word==null||word.length()==0)return false;
+        return search(word,0,this.root);
+    }
+    public boolean search(String word, int start, TrieNode root){
+        if(root==null) return false;
+        if(start==word.length()){
+            return root.isWord;
+        }
+        if(word.charAt(start)=='.'){
+            for(int i=0;i<root.next.length;i++){
+                if(root.next[i]!=null && search(word,start+1,root.next[i])){
+                    return true;
+                }
+            }
+        }
+        else{
+            return search(word,start+1,root.next[word.charAt(start)-'a']);
+        }
+        return false;
+    }
+}
+
+// Your WordDictionary object will be instantiated and called as such:
+// WordDictionary wordDictionary = new WordDictionary();
+// wordDictionary.addWord("word");
+// wordDictionary.search("pattern");
