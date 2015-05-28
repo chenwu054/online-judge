@@ -1,0 +1,32 @@
+/*
+Note: This is an extension of House Robber.
+
+After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
+
+Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+
+*/
+public class Solution {
+    public int rob(int[] nums) {
+        if(nums==null || nums.length==0) return 0;
+        if(nums.length==1) return nums[0];
+        int n = nums.length;
+        int[][] pick = new int[n][2*n];
+        int[][] nopick = new int[n][2*n];
+        int max=0;
+        for(int i=0;i<n;i++){
+            pick[i][i]=nums[i];
+        }
+        for(int i=0;i<n;i++){
+            for(int j=1;j<n;j++){
+                pick[i][i+j]=nopick[i][i+j-1]+nums[(i+j)%n];
+                nopick[i][i+j]=Math.max(nopick[i][i+j-1],pick[i][i+j-1]);
+            }
+        }
+        for(int i=0;i<n;i++){
+            max=Math.max(max,nopick[i][i+n-1]);
+        }
+        
+        return max;
+    }
+}
