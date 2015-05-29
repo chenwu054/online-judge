@@ -1,0 +1,31 @@
+/*
+Given an array of integers and an integer k, return true if and only if there are two distinct indices i and j in the array such that nums[i] = nums[j] and the difference between i and j is at most k.
+
+*/
+public class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        if(nums==null || nums.length<2 || k<1) return false;
+        int n = nums.length;
+        Set<Integer> set = new HashSet<Integer>();
+        for(int i=0;i<Math.min(n,k+1);i++){
+            if(set.contains(new Integer(nums[i]))){
+                return true;
+            }
+            else{
+                set.add(new Integer(nums[i]));
+            }
+        }
+        int i=k+1;
+        while(i<n){
+            set.remove(new Integer(nums[i-k-1]));
+            if(set.contains(new Integer(nums[i]))){
+                return true;
+            }
+            else{
+                set.add(new Integer(nums[i]));
+            }
+            i++;
+        }
+        return false;
+    }
+}
