@@ -1,0 +1,74 @@
+/*
+Given a complete binary tree, count the number of nodes.
+
+Definition of a complete binary tree from Wikipedia:
+In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. 
+It can have between 1 and 2h nodes inclusive at the last level h.
+*/
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int countNodes(TreeNode root) {
+        if(root==null){
+            return 0;
+        }
+        int[] left={0};
+        int[] right={0};
+        TreeNode node = root;
+        int tot=0;
+        findDepth(node,left,right);
+        if(left[0]==right[0]){
+            return (1<<(left[0]+1))-1;
+        }
+        tot+=(1<<(right[0]+1))-1;
+        int depth = right[0];
+        while(node!=null){
+            int d = findDiffDepth(node);
+            if(d==depth){
+                tot += 1<<(depth);
+                node=node.right;
+            }
+            else{
+                node=node.left;
+            }
+            depth--;
+        }
+        
+        return tot;
+    }
+    public int findDiffDepth(TreeNode root){
+        if(root==null){
+            return -1;
+        }
+        int num=-1;
+        TreeNode node=root.left;
+        while(node!=null){
+            num++;
+            node=node.right;
+        }
+        return num;
+    }
+    public void findDepth(TreeNode root, int[] left, int[] right){
+        TreeNode node=root;
+        int num=-1;
+        while(node!=null){
+            node=node.left;
+            num++;
+        }
+        left[0]=num;
+        num=-1;
+        node=root;
+        while(node!=null){
+            node=node.right;
+            num++;
+        }
+        right[0]=num;
+    }
+}
