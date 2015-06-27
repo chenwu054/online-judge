@@ -1,0 +1,40 @@
+/*
+Given a sorted integer array without duplicates, return the summary of its ranges.
+
+For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
+
+*/
+public class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> ret = new ArrayList<String>();
+        if(nums==null || nums.length==0) return ret;
+        int start = nums[0];
+        int end = start;
+        boolean close=false;
+        for(int i=1;i<nums.length;i++){
+            if(nums[i]==end+1){
+                end++;
+                continue;
+            }
+            else{
+                if(end==start){
+                    ret.add(""+start);
+                }
+                else{
+                    ret.add(start+"->"+end);
+                }
+                start=nums[i];
+                end=start;
+            }
+        }
+        
+        if(end==start){
+            ret.add(""+start);
+        }
+        else{
+            ret.add(start+"->"+end);
+        }
+        
+        return ret;
+    }
+}
