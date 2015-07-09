@@ -1,0 +1,49 @@
+/*
+Given a singly linked list, determine if it is a palindrome.
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+*/
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if(head==null) return true;
+        if(head.next==null) return true;
+        ListNode newHead = new ListNode(0);
+        newHead.next=head;
+        ListNode fast=newHead,slow=newHead;
+        boolean even=false;
+        while(fast!=null){
+            fast=fast.next;
+            slow=slow.next;
+            if(fast==null){
+                even=true;
+                break;
+            }
+            fast=fast.next;
+        }
+        fast = slow;
+        ListNode prev=null,node=head,next=node.next;
+        while(node!=fast){
+            node.next=prev;
+            prev=node;
+            node=next;
+            next=next.next;
+        }
+        if(!even){
+            fast=fast.next;
+        }
+        while(fast!=null && prev!=null && fast.val == prev.val){
+            fast=fast.next;
+            prev=prev.next;
+        }
+        return fast==null && prev==null;
+    }
+}
