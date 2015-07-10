@@ -1,0 +1,48 @@
+/*
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times. 
+The algorithm should run in linear time and in O(1) space.
+*/
+public class Solution {
+    public List<Integer> majorityElement(int[] nums) {
+        List<Integer> ret = new ArrayList<Integer>();
+        if(nums==null || nums.length==0) return ret;
+        Map<Integer,Integer> map =new HashMap<Integer,Integer>();
+        for(int i=0;i<nums.length;i++){
+            Integer newInt = new Integer(nums[i]);
+            if(map.containsKey(newInt)){
+                map.put(newInt,map.get(newInt) + 1);
+            }
+            else{
+                map.put(newInt,1);
+            }
+            if(map.size()==3){
+                for(Iterator<Map.Entry<Integer,Integer>> it = map.entrySet().iterator(); it.hasNext();){
+                    Map.Entry<Integer,Integer> cur = it.next();
+                    if(cur.getValue()==1){
+                        it.remove();
+                    }
+                    else{
+                        cur.setValue(cur.getValue()-1);
+                    }
+                }
+            }
+        }
+        Map<Integer,Integer> count = new HashMap<Integer,Integer>();
+        for(int i=0;i<nums.length;i++){
+            if(map.containsKey(nums[i])){
+                if(count.containsKey(nums[i])){
+                    count.put(nums[i],count.get(nums[i])+1);
+                }
+                else{
+                    count.put(nums[i],1);
+                }    
+            }
+        }
+        for(Integer key : map.keySet()){
+            if(count.get(key) > nums.length/3){
+                ret.add(key);
+            }
+        }
+        return ret;
+    }
+}
