@@ -4,6 +4,13 @@ Given an integer n, count the total number of digit 1 appearing in all non-negat
 For example:
 Given n = 13,
 Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
+solution:
+from the least significant digit to the most significant.
+for the current digit, there are 3 sources of 1's 
+1. current is 1, then add all the less significant numbers from xxx1ooo to xxx1xxx: n%(current digit) + 1 
+2. current is >1, then add all the less significant numbers
+3. number of occurrance (current n/10) * how many ones for each occurrance (pow(10,current digit))
+
 */
 public class Solution {
     public int countDigitOne(int n) {
