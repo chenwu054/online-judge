@@ -20,7 +20,33 @@ Output:
 
 [[1,2,6], [1,3,5], [2,3,4]]
 */
+//recursive: the pattern:
+public class Solution {
+    public void recursiveSum(int start, int left, List<List<Integer>>ret, List<Integer>list, int count){
+        if(left==0 && count==0){
+            ret.add(new ArrayList<Integer>(list));
+        }
+        if(start>9 || count<=0){
+            return;
+        }
+        list.add(0);
+        for(int i=start;i<10;i++){
+            list.set(list.size()-1,i);
+            recursiveSum(i+1,left-i,ret,list,count-1);
+        }
+        list.remove(list.size()-1);
+    }
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        int min = (k+1)*k/2;
+        int max = (9-k+1+9)*k/2;
+        if(n<min || n>max) return ret;
+        recursiveSum(1,n,ret,new ArrayList<Integer>(),k);
+        return ret;
+    }
+}
 
+//*******************************
 public List<List<Integer>> combinationSum3(int k, int n) {
         List<List<Integer>>list = new ArrayList<List<Integer>>();
         List<Integer> l = new ArrayList<Integer>();
