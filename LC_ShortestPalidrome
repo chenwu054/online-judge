@@ -8,6 +8,50 @@ Given "aacecaaa", return "aaacecaaa".
 
 Given "abcd", return "dcbabcd".
 */
+
+public class Solution {
+    public String shortestPalindrome(String s) {
+        if(s==null||s.length()==0) return s;
+        int n = s.length();
+        int[] lcp = new int[n];
+        int len=0;
+        for(int i=1;i<n;){
+            if(s.charAt(i)==s.charAt(len)){
+                lcp[i++]=++len;
+            }
+            else{
+                if(len>0){
+                    len=lcp[len-1];
+                }
+                else{
+                    i++;
+                }
+            }
+        }
+        len=0;
+        String reverseString = new StringBuilder(s).reverse().toString();
+        for(int i=0;i<n;){
+            if(s.charAt(len)==reverseString.charAt(i)){
+                i++;
+                len++;
+            }
+            else{
+                if(len>0){
+                    len=lcp[len-1];
+                }
+                else{
+                    i++;
+                }
+            }
+            if(i==n){
+                return reverseString+s.substring(len);
+            }
+        }
+        return s;
+    }
+}
+
+//**************
 public class Solution {
     public String shortestPalindrome(String s) {
         if(s==null||s.length()==0) return s;
