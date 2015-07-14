@@ -15,6 +15,38 @@ A solution set is:
 [1, 1, 6] 
 ********* be sure to remove duplicates *****
 */
+
+public class Solution {
+    public void recursiveSum(int[]c, int start, int left,List<List<Integer>>ret,List<Integer>list){
+        if(left==0){
+            ret.add(new ArrayList<Integer>(list));
+        }
+        if(start>=c.length){
+            return;
+        }
+        list.add(0);
+        for(int i=start;i<c.length;i++){
+            if(c[i]>left){
+                break;
+            }
+            list.set(list.size()-1,c[i]);
+            recursiveSum(c,i+1,left-c[i],ret,list);
+            while(i+1<c.length && c[i]==c[i+1]){
+                i++;
+            }
+        }
+        list.remove(list.size()-1);
+    }
+    public List<List<Integer>> combinationSum2(int[] c, int target) {
+        List<List<Integer>>ret =new ArrayList<List<Integer>>();
+        if(c==null||c.length==0) return ret;
+        Arrays.sort(c);
+        recursiveSum(c,0,target,ret,new ArrayList<Integer>());
+        return ret;
+    }
+}
+
+//**********************************************
 public class Solution {
     private void collect(int[] num, int start, int left, ArrayList<Integer>cur, ArrayList<ArrayList<Integer>> ret){
         if(left==0){
