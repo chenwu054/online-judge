@@ -8,12 +8,14 @@ For example,
 key: 每次确定一位
 */
 public class Solution {
+	// use boolean array to avoid duplicates
 	public static void permuteHelper(int[] num,boolean[] used, ArrayList<Integer>cur, ArrayList<ArrayList<Integer>>col){
 		if(cur.size()==num.length){
 			col.add(cur);
 			return;
 		}
 		for(int i=0;i<num.length;i++){
+		//important!!
 			if(used[i] || (i>0 && num[i]==num[i-1] && !used[i-1]))
 				continue;
 			used[i]=true;
