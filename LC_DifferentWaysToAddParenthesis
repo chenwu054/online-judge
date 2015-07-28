@@ -1,0 +1,82 @@
+/*
+Given a string of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. The valid operators are +, - and *.
+
+Example 1
+
+Input: "2-1-1".
+
+((2-1)-1) = 0
+(2-(1-1)) = 2
+
+Output: [0, 2]
+
+Example 2
+
+Input: "2*3-4*5"
+
+(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10
+
+Output: [-34, -14, -10, -10, 10]
+*/
+public class Solution {
+    public List<Integer> diffWaysToCompute(String input) {
+        List<Integer> ret = new ArrayList<Integer>();
+        if(input==null || input.length()==0){
+            return ret;
+        }
+        List<Integer> nums = new ArrayList<Integer>();
+        List<Character> ops = new ArrayList<Character>();
+        int num = 0;
+        for(int i=0;i<input.length();i++){
+            char c = input.charAt(i);
+            if(c=='+' || c=='-' || c=='*'){
+                ops.add(c);
+                nums.add(num);
+                num=0;
+            }
+            else if(c>='0' && c<='9'){
+                num=num*10 + c-'0';
+            }
+        }
+        nums.add(num);
+        int n=nums.size();
+        List<List<List<Integer>>> dp = new ArrayList<List<List<Integer>>>(n);
+        for(int i=0;i<n;i++){
+            List<List<Integer>> newList =new ArrayList<List<Integer>>();
+            List<Integer> list= new ArrayList<Integer>();
+            list.add(nums.get(i));
+            while(newList.size()<i){
+                newList.add(null);
+            }
+            dp.add(newList);
+            newList.add(list);
+        }
+        for(int len=1;len<n;len++){
+            for(int j=0;j<n-len;j++){
+                List<Integer> list = new ArrayList<Integer>();
+                for(int s=0;s<len;s++){
+                    List<Integer> left = dp.get(j).get(j+s);
+                    List<Integer> right = dp.get(j+s+1).get(j+len);
+                    for(int p=0;p<left.size();p++){
+                        for(int q=0;q<right.size();q++){
+                            switch (ops.get(j+s)){
+                                case '+' : num=left.get(p) + right.get(q); break;
+                                case '-' : num=left.get(p) - right.get(q); break;
+                                case '*' : num=left.get(p) * right.get(q); break;
+                            }
+                            list.add(num);
+                        }
+                    }
+                }
+                dp.get(j).add(list);
+            }
+        }
+        
+        return dp.get(0).get(n-1);
+    }
+
+}
