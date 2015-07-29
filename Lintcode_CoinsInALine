@@ -72,3 +72,50 @@ public class Solution {
     }
 }
 
+/*
+There are n coins in a line. Two players take turns to take a coin from one of the ends of the line until there are no more coins left. The player with the larger amount of money wins.
+
+Could you please decide the first player will win or lose?
+Have you met this question in a real interview?
+Example
+
+Given array A = [3,2,2], return true.
+
+Given array A = [1,2,4], return true.
+
+Given array A = [1,20,4], return false.
+Challenge
+
+Follow Up Question:
+
+If n is even. Is there any hacky algorithm that can decide whether first player will win or lose in O(1) memory and O(n) time?
+
+*/
+public class Solution {
+    /**
+     * @param values: an array of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int[] values) {
+        // write your code here
+        if(values.length<=1){
+            return true;
+        }
+        int n=values.length;
+        int[][] sum=new int[n][n];
+        int[][] max=new int[n][n];
+        for(int i=0;i<n;i++){
+            sum[i][i]=values[i];
+            max[i][i]=values[i];
+        }
+        for(int len=1;len<n;len++){
+            for(int i=0;i<n-len;i++){
+                sum[i][i+len]=sum[i][i+len-1]+values[i+len];
+                max[i][i+len]=Math.max(values[i]+sum[i+1][i+len]-max[i+1][i+len],
+                                        values[i+len]+sum[i][i+len-1]-max[i][i+len-1]);
+            }
+        }
+        return max[0][n-1]>sum[0][n-1]-max[0][n-1];
+    }
+}
+
