@@ -1,0 +1,44 @@
+/*
+Ugly number is a number that only have factors 3, 5 and 7.
+
+Design an algorithm to find the Kth ugly number. The first 5 ugly numbers are 3, 5, 7, 9, 15 ...
+
+Have you met this question in a real interview? Yes
+Example
+If K=4, return 9.
+
+Challenge
+O(K log K) or O(K) time.
+*/
+class Solution {
+    /**
+     * @param k: The number k.
+     * @return: The kth prime number as description.
+     */
+    public long kthPrimeNumber(int k) {
+        // write your code here
+        PriorityQueue<Long> pq = new PriorityQueue<Long>();
+        pq.add(new Long(1));
+        long num = 0;
+        Set<Long> used = new HashSet<Long>();
+        used.add(new Long(1));
+        while(k>=0){
+            num=pq.poll();
+            if(!used.contains(num*3)){
+                pq.add(num*3); 
+                used.add(num*3);
+            }
+            if(!used.contains(num*5)){
+                pq.add(num*5);    
+                used.add(num*5);
+            }
+            if(!used.contains(num*7)){
+                pq.add(num*7);
+                used.add(num*7);
+            }
+            k--;
+        }
+        return num;
+    }
+};
+
