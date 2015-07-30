@@ -1,0 +1,56 @@
+/*
+Given an array A of integer with size of n( means n books and number of pages of each book) and k people to copy the book. You must distribute the continuous id books to one people to copy. (You can give book A[1],A[2] to one people, but you cannot give book A[1], A[3] to one people, because book A[1] and A[3] is not continuous.) Each person have can copy one page per minute. Return the number of smallest minutes need to copy all the books.
+Have you met this question in a real interview?
+Example
+
+Given array A = [3,2,4], k = 2.
+
+Return 5( First person spends 5 minutes to copy book 1 and book 2 and second person spends 4 minutes to copy book 3. )
+Challenge
+
+Could you do this in O(n*k) time ?
+
+*/
+public class Solution {
+    /**
+     * @param pages: an array of integers
+     * @param k: an integer
+     * @return: an integer
+     */
+    public int copyBooks(int[] pages, int k) {
+        // write your code here
+        int sum = 0;
+        for(int i=0;i<pages.length;i++){
+            sum+=pages[i];
+        }
+        int start=0,end=sum,mid=0;
+        while(start<end){
+            mid=start+(end-start)/2;
+            int g = 0,tot=0;
+            for(int i=0;i<pages.length;){
+                if(tot+pages[i]>mid){
+                    g++;
+                    tot=0;
+                }
+                else{
+                    tot+=pages[i];
+                    i++;
+                }
+                if(g>k){
+                    break;
+                }
+            }
+            //important to add this last group 
+            if(tot>0){
+                g++;
+            }
+            if(g<=k){
+                end=mid;
+            }
+            else{
+                start=mid+1;
+            }
+        }
+        return start;
+    }
+}
