@@ -1,0 +1,112 @@
+/*
+
+*/
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param n an integer
+     * @param m an integer
+     * @param operators an array of point
+     * @return an integer array
+     */
+    public List<Integer> numIslands2(int n, int m, Point[] operators) {
+        // Write your code here
+        List<Integer> ret = new ArrayList<Integer>();
+        if(operators==null){
+            return ret;
+        }
+        Map<Integer,Set<Integer>>next =new HashMap<Integer,Set<Integer>>();
+        Map<Integer,Set<Integer>>islands= new HashMap<Integer,Set<Integer>>();
+        for(int i=0;i<operators.length;i++){
+            Point p = operators[i];
+            if(islands.containsKey(p.x) && islands.get(p.x).contains(p.y)){
+                ret.add(ret.get(ret.size()-1));
+                continue;
+            }
+            else if(next.containsKey(p.x)&&next.get(p.x).contains(p.y)){
+                ret.add(ret.get(ret.size()-1));
+                next.get(p.x).remove(p.y);
+                if(!islands.containsKey(p.x)){
+                    islands.put(p.x, new HashSet<Integer>());
+                }
+                islands.get(p.x).add(p.y);
+                // add neighbor
+            }
+            else{
+                if(ret.size()==0){
+                    ret.add(1);
+                }
+                else{
+                    ret.add(ret.get(ret.size()-1)+1);    
+                }
+                if(!islands.containsKey(p.x)){
+                    islands.put(p.x,new HashSet<Integer>());
+                }
+                islands.get(p.x).add(p.y);
+            }
+            int connect = 0;
+            //upper:
+            if(p.x>0 && (!next.containsKey(p.x-1)||!next.get(p.x-1).contains(p.y))){
+                if((!islands.containsKey(p.x-1) || !islands.get(p.x-1).contains(p.y))){
+                    if(!next.containsKey(p.x-1)){
+                        next.put(p.x-1,new HashSet<Integer>());
+                    }
+                    next.get(p.x-1).add(p.y);
+                }
+                else{
+                    connect++;
+                }
+                
+            }
+            //down:
+            if(p.x<n-1 && (!next.containsKey(p.x+1)||!next.get(p.x+1).contains(p.y))){
+                if(!islands.containsKey(p.x+1) || !islands.get(p.x+1).contains(p.y)){
+                    if(!next.containsKey(p.x+1)){
+                        next.put(p.x+1,new HashSet<Integer>());
+                    }
+                    next.get(p.x+1).add(p.y);
+                }
+                else{
+                    connect++;
+                }
+            }
+            //left:
+            if(p.y>0 && (!next.containsKey(p.x)||!next.get(p.x).contains(p.y-1))){
+                if(!islands.containsKey(p.x) || !islands.get(p.x).contains(p.y-1)){
+                    if(!next.containsKey(p.x)){
+                        next.put(p.x,new HashSet<Integer>());
+                    }
+                    next.get(p.x).add(p.y-1);
+                }
+                else{
+                    connect++;
+                }
+            }
+            //right:
+            if(p.y<m-1 && (!next.containsKey(p.x)||!next.get(p.x).contains(p.y+1))){ 
+                if(!islands.containsKey(p.x) || !islands.get(p.x).contains(p.y+1)){
+                    if(!next.containsKey(p.x)){
+                        next.put(p.x,new HashSet<Integer>());
+                    }
+                    next.get(p.x).add(p.y+1);
+                }
+                else{
+                    connect++;
+                }
+            }
+            if(connect>1){
+                ret.set(ret.size()-1,ret.get(ret.size()-1) - (connect-1));
+            }
+        }
+        
+        return ret;
+    }
+}
