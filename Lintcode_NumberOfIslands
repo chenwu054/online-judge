@@ -1,3 +1,85 @@
+
+
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param n an integer
+     * @param m an integer
+     * @param operators an array of point
+     * @return an integer array
+     */
+    public List<Integer> numIslands2(int n, int m, Point[] operators) {
+        // Write your code here
+        List<Integer> ret = new ArrayList<Integer>();
+        if(operators==null){
+            return ret;
+        }
+        int[] islands=new int[n*m];
+        Arrays.fill(islands,-1);
+        int last=0;
+        int[] roots=new int[4];
+        Set<Integer> set = new HashSet<Integer>();
+        for(int i=0;i<operators.length;i++){
+            Point p = operators[i];
+            int idx = p.x*m+p.y;
+            if(islands[idx]>=0){
+                ret.add(last);
+                continue;
+            }
+            else{
+                islands[idx]=idx;
+                ret.add(++last);
+            }
+            int upperIdx=p.x>0?(p.x-1)*m+p.y:-1;
+            int lowerIdx=p.x<n-1?(p.x+1)*m+p.y:-1;
+            int leftIdx=p.y>0?p.x*m+p.y-1:-1;
+            int rightIdx=p.y<m-1?p.x*m+p.y+1:-1;
+            roots[0]=upperIdx>=0&&islands[upperIdx]>=0?upperIdx:-1;
+            while(roots[0]>=0 && roots[0]!=islands[roots[0]]){
+                roots[0]=islands[roots[0]];
+            }
+            roots[1]=lowerIdx>=0&&islands[lowerIdx]>=0?lowerIdx:-1;
+            while(roots[1]>=0 && roots[1]!=islands[roots[1]]){
+                roots[1]=islands[roots[1]];
+            }
+            roots[2]=leftIdx>0&&islands[leftIdx]>=0?leftIdx:-1;
+            while(roots[2]>=0 && roots[2]!=islands[roots[2]]){
+                roots[2]=islands[roots[2]];
+            }
+            roots[3]=rightIdx>0&&islands[rightIdx]>=0?rightIdx:-1;
+            while(roots[3]>=0 && roots[3]!=islands[roots[3]]){
+                roots[3]=islands[roots[3]];
+            }
+            int j=0;
+            while(j<4 && roots[j]<0){
+                j++;
+            }
+            set.clear();
+            while(j<4){
+                if(!set.contains(roots[j])){
+                    set.add(roots[j]);
+                }
+                islands[roots[j]]=idx;
+                j++;
+            }
+            last-=set.size();
+            ret.set(ret.size()-1,last);
+        }
+        
+        return ret;
+    }
+}
+
+
+
 /*
 
 */
