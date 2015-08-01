@@ -1,5 +1,20 @@
+/*
+Given a n,m which means the row and column of the 2D matrix and an array of pair A( size k). Originally, the 2D matrix is all 0 which means there is only sea in the matrix. The list pair has k operator and each operator has two integer A[i].x, A[i].y means that you can change the grid matrix[A[i].x][A[i].y] from sea to island. Return how many island are there in the matrix after each operator.
 
+Have you met this question in a real interview? Yes
+Example
+Given n = 3, m = 3, array of pair A = [(0,0),(0,1),(2,2),(2,1)].
 
+return [1,1,2,2].
+
+Note
+0 is represented as the sea, 1 is represented as the island. If two 1 is adjacent, we consider them in the same island. We only consider up/down/left/right adjacent.
+
+solution: using quick find and quick union, disjoint set.
+using root = islands[root] to find the top island group.
+running time is close to linear depending on the union find and union set algorithm. Using optimization, can achieve log(log(n)) 
+time complexity to achive union find. But not implemented in this the code. In random input, on average, it takes log(n) for the union find.
+*/
 /**
  * Definition for a point.
  * class Point {
@@ -43,6 +58,7 @@ public class Solution {
             int leftIdx=p.y>0?p.x*m+p.y-1:-1;
             int rightIdx=p.y<m-1?p.x*m+p.y+1:-1;
             roots[0]=upperIdx>=0&&islands[upperIdx]>=0?upperIdx:-1;
+            //union find operations
             while(roots[0]>=0 && roots[0]!=islands[roots[0]]){
                 roots[0]=islands[roots[0]];
             }
@@ -50,7 +66,7 @@ public class Solution {
             while(roots[1]>=0 && roots[1]!=islands[roots[1]]){
                 roots[1]=islands[roots[1]];
             }
-            roots[2]=leftIdx>0&&islands[leftIdx]>=0?leftIdx:-1;
+            roots[2]=leftIdx>=0&&islands[leftIdx]>=0?leftIdx:-1;
             while(roots[2]>=0 && roots[2]!=islands[roots[2]]){
                 roots[2]=islands[roots[2]];
             }
@@ -59,203 +75,21 @@ public class Solution {
                 roots[3]=islands[roots[3]];
             }
             int j=0;
-            while(j<4 && roots[j]<0){
-                j++;
-            }
             set.clear();
             while(j<4){
-                if(!set.contains(roots[j])){
+                if(roots[j]<0){
+                    j++;
+                    continue;
+                }
+                else if(!set.contains(roots[j])){
                     set.add(roots[j]);
                 }
                 islands[roots[j]]=idx;
                 j++;
             }
+            //minus the adjacent islands.
             last-=set.size();
             ret.set(ret.size()-1,last);
-        }
-        
-        return ret;
-    }
-}
-
-
-
-/*
-
-*/
-/**
- * Definition for a point.
- * class Point {
- *     int x;
- *     int y;
- *     Point() { x = 0; y = 0; }
- *     Point(int a, int b) { x = a; y = b; }
- * }
- */
-public class Solution {
-    /**
-     * @param n an integer
-     * @param m an integer
-     * @param operators an array of point
-     * @return an integer array
-     */
-    public List<Integer> numIslands2(int n, int m, Point[] operators) {
-        // Write your code here
-        List<Integer> ret = new ArrayList<Integer>();
-        if(operators==null){
-            return ret;
-        }
-        Map<Integer,Set<Integer>>next =new HashMap<Integer,Set<Integer>>();
-        Map<Integer,Set<Integer>>islands= new HashMap<Integer,Set<Integer>>();
-        for(int i=0;i<operators.length;i++){
-            Point p = operators[i];
-            if(islands.containsKey(p.x) && islands.get(p.x).contains(p.y)){
-                ret.add(ret.get(ret.size()-1));
-                continue;
-            }
-            else if(next.containsKey(p.x)&&next.get(p.x).contains(p.y)){
-                ret.add(ret.get(ret.size()-1));
-                next.get(p.x).remove(p.y);
-                if(!islands.containsKey(p.x)){
-                    islands.put(p.x, new HashSet<Integer>());
-                }
-                islands.get(p.x).add(p.y);
-                // add neighbor
-            }
-            else{
-                if(ret.size()==0){
-                    ret.add(1);
-                }
-                else{
-                    ret.add(ret.get(ret.size()-1)+1);    
-                }
-                if(!islands.containsKey(p.x)){
-                    islands.put(p.x,new HashSet<Integer>());
-                }
-                islands.get(p.x).add(p.y);
-            }
-            int connect = 0;
-            //upper:
-            if(p.x>0 && (!next.containsKey(p.x-1)||!next.get(p.x-1).contains(p.y))){
-                if((!islands.containsKey(p.x-1) || !islands.get(p.x-1).contains(p.y))){
-                    if(!next.containsKey(p.x-1)){
-                        next.put(p.x-1,new HashSet<Integer>());
-                    }
-                    next.get(p.x-1).add(p.y);
-                }
-                else{
-                    connect++;
-                }
-                
-            }
-            //down:
-            if(p.x<n-1 && (!next.containsKey(p.x+1)||!next.get(p.x+1).contains(p.y))){
-                if(!islands.containsKey(p.x+1) || !islands.get(p.x+1).contains(p.y)){
-                    if(!next.containsKey(p.x+1)){
-                        next.put(p.x+1,new HashSet<Integer>());
-                    }
-                    next.get(p.x+1).add(p.y);
-                }
-                else{
-                    connect++;
-                }
-            }
-            //left:
-            if(p.y>0 && (!next.containsKey(p.x)||!next.get(p.x).contains(p.y-1))){
-                if(!islands.containsKey(p.x) || !islands.get(p.x).contains(p.y-1)){
-                    if(!next.containsKey(p.x)){
-                        next.put(p.x,new HashSet<Integer>());
-                    }
-                    next.get(p.x).add(p.y-1);
-                }
-                else{
-                    connect++;
-                }
-            }
-            //right:
-            if(p.y<m-1 && (!next.containsKey(p.x)||!next.get(p.x).contains(p.y+1))){ 
-                if(!islands.containsKey(p.x) || !islands.get(p.x).contains(p.y+1)){
-                    if(!next.containsKey(p.x)){
-                        next.put(p.x,new HashSet<Integer>());
-                    }
-                    next.get(p.x).add(p.y+1);
-                }
-                else{
-                    connect++;
-                }
-            }
-            if(connect>1){
-                ret.set(ret.size()-1,ret.get(ret.size()-1) - (connect-1));
-            }
-        }
-        
-        return ret;
-    }
-}
-
-/**
- * Definition for a point.
- * class Point {
- *     int x;
- *     int y;
- *     Point() { x = 0; y = 0; }
- *     Point(int a, int b) { x = a; y = b; }
- * }
- */
-public class Solution {
-    /**
-     * @param n an integer
-     * @param m an integer
-     * @param operators an array of point
-     * @return an integer array
-     */
-    public List<Integer> numIslands2(int n, int m, Point[] operators) {
-        // Write your code here
-        List<Integer> ret = new ArrayList<Integer>();
-        if(operators==null){
-            return ret;
-        }
-        int[] islands=new int[n*m];
-        Arrays.fill(islands,-1);
-        int last=0;
-        int[] roots=new int[4];
-        for(int i=0;i<operators.length;i++){
-            Point p = operators[i];
-            int idx = p.x*m+p.y;
-            if(islands[idx]>=0){
-                ret.add(last);
-                continue;
-            }
-            else{
-                islands[idx]=idx;
-                ret.add(++last);
-            }
-            int upperIdx=p.x>0?(p.x-1)*m+p.y:-1;
-            int lowerIdx=p.x<n-1?(p.x+1)*m+p.y:-1;
-            int leftIdx=p.y>0?p.x*m+p.y-1:-1;
-            int rightIdx=p.y<m-1?p.x*m+p.y+1:-1;
-            roots[0]=upperIdx>=0&&islands[upperIdx]>=0?upperIdx:-1;
-            while(roots[0]>=0 && roots[0]!=islands[roots[0]]){
-                roots[0]=islands[roots[0]];
-            }
-            roots[1]=lowerIdx>=0&&islands[lowerIdx]>=0?lowerIdx:-1;
-            while(roots[1]>=0 && roots[1]!=islands[roots[1]]){
-                roots[1]=islands[roots[1]];
-            }
-            roots[2]=leftIdx>0&&islands[leftIdx]>=0?leftIdx:-1;
-            while(roots[2]>=0 && roots[2]!=islands[roots[2]]){
-                roots[2]=islands[roots[2]];
-            }
-            int roots[3]=upperIdx>0&&islands[rightIdx]>=0?rightIdx:-1;
-            while(roots[3]>=0 && roots[3]!=islands[roots[3]]){
-                roots[3]=islands[roots[3]];
-            }
-            int j=0;
-            while(j<4 && roots[j]<0){
-                j++;
-            }
-            int connect=
-            
         }
         
         return ret;
