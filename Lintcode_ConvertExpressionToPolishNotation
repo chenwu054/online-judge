@@ -1,0 +1,88 @@
+/*
+Given an expression string array, return the Polish notation of this expression. (remove the parentheses)
+
+Have you met this question in a real interview? Yes
+Example
+For the expression [(5 − 6) * 7] (which represented by ["(", "5", "−", "6", ")", "*", "7"]), the corresponding polish notation is [* - 5 6 7] (which the return value should be ["*", "−", "5", "6", "7"]).
+
+Clarification
+Definition of Polish Notation:
+
+http://en.wikipedia.org/wiki/Polish_notation
+http://baike.baidu.com/view/7857952.htm
+
+solution: there is a last operation of either + or - operation.
+If lastOperator (either + or -) is present, add the operand to the lastOperand
+*/
+public class Solution {
+    /**
+     * @param expression: A string array
+     * @return: The Polish notation of this expression
+     */
+    public ArrayList<String> convertToPN(String[] e) {
+        // write your code here
+        ArrayList<String> ret = new ArrayList<String>();
+        if(e==null||e.length==0){
+            return ret;
+        }
+        int[] idx={0};
+        LinkedList<String> q  = recursivePN(e,idx);
+        ret.addAll(q);
+        return ret;
+    }
+    public LinkedList<String> recursivePN(String[] e, int[] start){
+        LinkedList<String> ret = new LinkedList<String>();
+        if(start[0]>=e.length){
+            return ret;
+        }
+        LinkedList<String> lastOperand=new LinkedList<String>();
+        String lastOperator=null;
+        //
+        for(;start[0]<e.length;start[0]=start[0]+1){
+            String s = e[start[0]];
+            if(s.equals("*") || s.equals("/")){
+                if(lastOperator!=null){
+                    lastOperand.offerFirst(s);
+                }
+                else{
+                    ret.offerFirst(s);
+                }
+            }
+            else if(s.equals("+") || s.equals("-")){
+                if(lastOperator!=null){
+                    ret.offerFirst(lastOperator);
+                    ret.addAll(lastOperand);
+                }
+                lastOperator=s;
+                lastOperand.clear();
+            }
+            else if(s.equals("(")){
+                start[0]=start[0]+1;
+                LinkedList<String> list = recursivePN(e,start); // get the next operand
+                if(lastOperator!=null){
+                    lastOperand.addAll(list);
+                }
+                else{
+                    ret.addAll(list);    
+                }
+            }
+            else if(s.equals(")")){
+                break;
+            }
+            else{
+                if(lastOperator!=null){
+                    lastOperand.add(s);   
+                }
+                else{
+                    ret.add(s);    
+                }
+            }
+        }
+        if(lastOperator!=null){
+            ret.offerFirst(lastOperator);
+            ret.addAll(lastOperand);
+        }
+        return ret;
+    }
+    
+}
