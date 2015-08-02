@@ -1,0 +1,86 @@
+/*
+
+*/
+public class Solution {
+    /**
+      * @param start, a string
+      * @param end, a string
+      * @param dict, a set of string
+      * @return a list of lists of string
+      */
+    public List<List<String>> findLadders(String start, String end, Set<String> dict) {
+        // write your code here  
+        List<List<String>> ret=new ArrayList<List<String>>();
+        Map<String,Set<String>> from =new HashMap<String,Set<String>>();
+        // level hashmap of the mapping is important to exclude the mapping intermediate words to other branches.
+        //!!! Ensure every word in the routes are shortest in terms of the distance to end/start
+        Map<String,Set<String>> levelFrom = new HashMap<String,Set<String>>();
+        Set<String> visited = new HashSet<String>();
+        Queue<String> q = new LinkedList<String>();
+        Queue<String> next = new LinkedList<String>();
+        Queue<String> temp = null;
+        q.add(end);
+        from.put(end,new HashSet<String>());
+        boolean found=false;
+        while(q.size()>0 && !found){
+            while(q.size()>0){
+                String cur = q.poll();
+                if(cur.equals(start)){
+                    found=true;
+                    break;
+                }
+                StringBuilder sb = new StringBuilder(cur);
+                for(int i=0;i<sb.length();i++){
+                    char curChar = sb.charAt(i);
+                    for(int j=0;j<26;j++){
+                        if(curChar-'a'==j){
+                            continue;
+                        }
+                        sb.setCharAt(i,(char)(j+'a'));
+                        String nextStr = sb.toString();
+                        if(dict.contains(nextStr)){
+                            if(!from.containsKey(nextStr)){
+                                next.add(nextStr);
+                                if(!levelFrom.containsKey(nextStr)){
+                                    levelFrom.put(nextStr,new HashSet<String>());    
+                                }
+                                levelFrom.get(nextStr).add(cur);;
+                            }
+                        }
+                    }
+                    sb.setCharAt(i,curChar);
+                }
+            }
+            temp=q;
+            q=next;
+            next=temp;
+            //important!!!
+            from.putAll(levelFrom);
+            levelFrom.clear();
+        }
+        List<String> newlist = new ArrayList<String>();
+        newlist.add(start);
+        ret.add(newlist);
+        while(found){
+            int len = ret.size();
+            for(int i=0;i<len;i++){
+                List<String> list = ret.get(i);
+                String last = list.get(list.size()-1);
+                Set<String> set = from.get(last);
+                for(String str:set){
+                    List<String> nextList = new ArrayList<String>(list);
+                    nextList.add(str);
+                    ret.add(nextList);
+                    if(str.equals(end)){
+                        found=false;
+                    }
+                }
+                int lastRow = ret.size()-1;
+                list.add(ret.get(lastRow).get(ret.get(lastRow).size()-1));
+                ret.remove(lastRow);
+            }
+        }
+        return ret;
+    }
+    
+}
