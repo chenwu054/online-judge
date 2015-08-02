@@ -1,0 +1,60 @@
+/*
+Give you an integer matrix (with row size n, column size m)，find the longest increasing continuous subsequence in this matrix. (The definition of the longest increasing continuous subsequence here can start at any row or column and go up/down/right/left any direction).
+
+Have you met this question in a real interview? Yes
+Example
+Given a matrix:
+
+[
+  [1 ,2 ,3 ,4 ,5],
+  [16,17,24,23,6],
+  [15,18,25,22,7],
+  [14,19,20,21,8],
+  [13,12,11,10,9]
+]
+return 25
+
+Challenge
+O(nm) time and memory.
+*/
+public class Solution {
+    /**
+     * @param A an integer matrix
+     * @return  an integer
+     */
+    public int longestIncreasingContinuousSubsequenceII(int[][] a) {
+        // Write your code here
+        if(a==null||a.length==0){
+            return 0;
+        }
+        int n=a.length,m=a[0].length;
+        int max=0;
+        int[][] dp =  new int[n][m];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(dp[i][j]==0){
+                    //dfs
+                    dfs(a,i,j,a[i][j]-1,dp);
+                }
+                max=Math.max(max,dp[i][j]);
+            }
+        }
+        return max;
+    }
+    public int dfs(int[][] a, int i, int j, int val, int[][] dp){
+        if(i<0 || j<0 || i>=a.length || j>=a[0].length || (a[i][j]<=val&&a[i][j]!=Integer.MIN_VALUE)){
+            return 0;
+        }
+        if(dp[i][j]!=0){
+           return dp[i][j]; 
+        }
+        int upper = dfs(a,i-1,j,a[i][j],dp);
+        int lower = dfs(a,i+1,j,a[i][j],dp);
+        int left = dfs(a,i,j-1,a[i][j],dp);
+        int right = dfs(a,i,j+1,a[i][j],dp);
+        int max = Math.max(Math.max(upper,lower),Math.max(left,right));
+        dp[i][j]=1+max;
+        return dp[i][j];
+    }
+    
+}
