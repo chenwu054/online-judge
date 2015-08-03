@@ -1,0 +1,103 @@
+/*
+The structure of Expression Tree is a binary tree to evaluate certain expressions. All leaves of the Expression Tree have an number string value. All non-leaves of the Expression Tree have an operator string value.
+
+Now, given an expression array, build the expression tree of this expression, return the root of this expression tree.
+Have you met this question in a real interview?
+Example
+
+For the expression (2*6-(23+7)/(1+2)) (which can be represented by ["2" "*" "6" "-" "(" "23" "+" "7" ")" "/" "(" "1" "+" "2" ")"]). The expression tree will be like
+
+                 [ - ]
+             /          \
+        [ * ]              [ / ]
+      /     \           /         \
+    [ 2 ]  [ 6 ]      [ + ]        [ + ]
+                     /    \       /      \
+                   [ 23 ][ 7 ] [ 1 ]   [ 2 ] .
+
+After building the tree, you just need to return root node [-].
+
+*/
+/**
+ * Definition of ExpressionTreeNode:
+ * public class ExpressionTreeNode {
+ *     public String symbol;
+ *     public ExpressionTreeNode left, right;
+ *     public ExpressionTreeNode(String symbol) {
+ *         this.symbol = symbol;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param expression: A string array
+     * @return: The root of expression tree
+     */
+    public ExpressionTreeNode build(String[] e) {
+        // write your code here
+        if(e==null||e.length==0){
+            return null;
+        }
+        Stack<ExpressionTreeNode> numK = new Stack<ExpressionTreeNode>();
+        Stack<ExpressionTreeNode> opK = new Stack<ExpressionTreeNode>();
+        
+        for(int i=0;i<e.length;i++){
+            String s = e[i];
+            if(s.equals("+") || s.equals("-")){
+                ExpressionTreeNode node=new ExpressionTreeNode(s);
+                opK.push(node);    
+            }
+            else if(s.equals("*") || s.equals("/")){
+                ExpressionTreeNode node=new ExpressionTreeNode(s);
+                opK.push(node);
+            }
+            else if(s.equals("(")){
+                ExpressionTreeNode node=new ExpressionTreeNode(s);
+                numK.push(node);
+            }
+            else if(s.equals(")")){
+                while(numK.size()>0 && opK.size()>0){
+                    ExpressionTreeNode opNode=opK.pop();
+                    ExpressionTreeNode node2 = numK.pop();
+                    ExpressionTreeNode node1 = numK.pop();
+                    opNode.left=node1;
+                    opNode.right=node2;
+                    if(numK.size()>0 && numK.peek().symbol.equals("(")){
+                        numK.pop();
+                        numK.push(opNode);
+                        break;
+                    }
+                    else{
+                        numK.push(opNode);    
+                    }
+                }
+            }
+            else{
+                ExpressionTreeNode node=new ExpressionTreeNode(s);
+                numK.push(node);
+                if(opK.size()>0){
+                    if(opK.peek().symbol.equals("*")||opK.peek().symbol.equals("/")){
+                        ExpressionTreeNode opNode=opK.pop();
+                        ExpressionTreeNode node2 = numK.pop();
+                        ExpressionTreeNode node1 = numK.pop();
+                        opNode.left=node1;
+                        opNode.right=node2;
+                        numK.push(opNode);
+                    }
+                }
+            }
+        }
+        //leftover in stack
+        while(numK.size()>0 && opK.size()>0){
+            ExpressionTreeNode opNode=opK.pop();
+            ExpressionTreeNode node2 = numK.pop();
+            ExpressionTreeNode node1 = numK.pop();
+            opNode.left=node1;
+            opNode.right=node2;
+            numK.push(opNode);
+        }
+        return numK.pop();
+    }
+}
