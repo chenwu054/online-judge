@@ -35,7 +35,7 @@ public class Solution {
      * @param expression: A string array
      * @return: The root of expression tree
      */
-    public ExpressionTreeNode build(String[] e) {
+    public static ExpressionTreeNode build(String[] e) {
         // write your code here
         if(e==null||e.length==0){
             return null;
@@ -47,25 +47,32 @@ public class Solution {
             String s = e[i];
             if(s.equals("+") || s.equals("-")){
                 ExpressionTreeNode node=new ExpressionTreeNode(s);
-                opK.push(node);    
+                numK.push(node);    
             }
             else if(s.equals("*") || s.equals("/")){
                 ExpressionTreeNode node=new ExpressionTreeNode(s);
-                opK.push(node);
+                numK.push(node);
             }
             else if(s.equals("(")){
                 ExpressionTreeNode node=new ExpressionTreeNode(s);
                 numK.push(node);
             }
             else if(s.equals(")")){
-                while(numK.size()>0 && opK.size()>0){
-                    ExpressionTreeNode opNode=opK.pop();
-                    ExpressionTreeNode node2 = numK.pop();
+                while(numK.size()>1){
+                    ExpressionTreeNode node2=numK.pop();
+                    ExpressionTreeNode opNode = numK.pop();
                     ExpressionTreeNode node1 = numK.pop();
                     opNode.left=node1;
                     opNode.right=node2;
                     if(numK.size()>0 && numK.peek().symbol.equals("(")){
                         numK.pop();
+                        if(numK.size()>0 && (numK.peek().symbol.equals("*") || numK.peek().symbol.equals("/"))){
+                        	ExpressionTreeNode nextOpNode=numK.pop();
+                        	ExpressionTreeNode nextNode = numK.pop();
+                        	nextOpNode.left=nextNode;
+                        	nextOpNode.right=opNode;
+                        	opNode=nextOpNode;
+                        }
                         numK.push(opNode);
                         break;
                     }
@@ -73,26 +80,26 @@ public class Solution {
                         numK.push(opNode);    
                     }
                 }
+                
             }
             else{
                 ExpressionTreeNode node=new ExpressionTreeNode(s);
-                numK.push(node);
-                if(opK.size()>0){
-                    if(opK.peek().symbol.equals("*")||opK.peek().symbol.equals("/")){
-                        ExpressionTreeNode opNode=opK.pop();
+                if(numK.size()>0 && (numK.peek().symbol.equals("*")||numK.peek().symbol.equals("/"))){
+                        ExpressionTreeNode opNode=numK.pop();
                         ExpressionTreeNode node2 = numK.pop();
-                        ExpressionTreeNode node1 = numK.pop();
-                        opNode.left=node1;
-                        opNode.right=node2;
+                        opNode.left=node2;
+                        opNode.right=node;
                         numK.push(opNode);
-                    }
+                }
+                else{
+                    numK.push(node);
                 }
             }
         }
         //leftover in stack
-        while(numK.size()>0 && opK.size()>0){
-            ExpressionTreeNode opNode=opK.pop();
-            ExpressionTreeNode node2 = numK.pop();
+        while(numK.size()>2){
+            ExpressionTreeNode node2=numK.pop();
+            ExpressionTreeNode opNode = numK.pop();
             ExpressionTreeNode node1 = numK.pop();
             opNode.left=node1;
             opNode.right=node2;
@@ -101,3 +108,4 @@ public class Solution {
         return numK.pop();
     }
 }
+
