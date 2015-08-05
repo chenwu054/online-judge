@@ -18,7 +18,7 @@ solution: DP
 2. Preprocessing: find the total distance from index i to index j (j>=i) both inclusive -> O(n^2) time
 3. dp[i][j] -> there are i groups ending at j = all the MIN(dp[i-1][s] + dist[s+1][j])
 4. return dp[k_th][n_th]
-
+Runtime complexity: O(k*n^2)
 */
 public int postOffice(int[] a, int k) {
     // Write your code here
