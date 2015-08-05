@@ -1,0 +1,58 @@
+/*
+
+Hard Post Office Problem
+22%
+Accepted
+
+On one line there are n houses. Give you an array of integer means the the position of each house. Now you need to pick k position to build k post office, so that the sum distance of each house to the nearest post office is the smallest. Return the least possible sum of all distances between each village and its nearest post office.
+Have you met this question in a real interview?
+Example
+
+Given array a = [1,2,3,4,5], k = 2. return 3.
+Challenge
+
+Could you solve this problem in O(n^2) time ?
+
+solution: DP
+1. The idea is to separate the locations into k groups
+2. Preprocessing: find the total distance from index i to index j (j>=i) both inclusive -> O(n^2) time
+3. dp[i][j] -> there are i groups ending at j = all the MIN(dp[i-1][s] + dist[s+1][j])
+4. return dp[k_th][n_th]
+
+*/
+public int postOffice(int[] a, int k) {
+    // Write your code here
+    if(a==null||a.length==0 || k>=a.length){
+        return 0;
+    }
+    int n = a.length;
+    int[][] dist=new int[n][n];
+    Arrays.sort(a);
+    // for(int i=0;i<dist.length-1;i++){
+    //     dist[i][i+1]=a[i+1]-a[i];
+    // }
+    for(int len=1;len<n;len++){
+        for(int i=0;i<n-len;i++){
+        	if(len%2==0){
+        		dist[i][i+len]=dist[i][i+len-1]+a[i+len]-a[i+(len+1)/2];
+        	}
+        	else{
+        		dist[i][i+len]=dist[i][i+len-1]+a[i+len]-a[i+len/2];
+        	}
+        }
+    }
+    int[][]dp = new int[k][n];
+    for(int i=0;i<n;i++){
+        dp[0][i]=dist[0][i];
+    }
+    for(int i=1;i<k;i++){
+        for(int j=i;j<n;j++){
+            int min = dist[0][n-1];
+            for(int s=i-1;s<j;s++){
+                min=Math.min(min,dist[s+1][j] + dp[i-1][s]);
+            }
+            dp[i][j]=min;
+        }
+    }
+    return dp[k-1][n-1];
+}
