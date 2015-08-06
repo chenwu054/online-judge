@@ -12,6 +12,41 @@
   [7] 
   [2, 2, 3] 
 */
+
+public List<List<Integer>> combinationSum2(int[] num, int target) {
+    // write your code here
+    List<List<Integer>>ret=new ArrayList<List<Integer>>();
+    if(num==null||num.length==0){
+        return ret;
+    }
+    Arrays.sort(num);
+    recursiveCombine(num,0,target,new ArrayList<Integer>(),ret);
+    return ret;
+}
+public void recursiveCombine(int[] num, int start, int left, List<Integer>list,List<List<Integer>> ret){
+    if(left==0){
+        List<Integer> newList=new ArrayList<Integer>(list);
+        ret.add(newList);
+        return;
+    }
+    if(start>=num.length){
+        return;
+    }
+    list.add(0);
+    for(int i=start;i<num.length;i++){
+        if(num[i]>left){
+            break;
+        }
+        list.set(list.size()-1,num[i]);
+        recursiveCombine(num,i+1,left-num[i],list,ret);
+        //skip duplicates: important!!
+        while(i+1<num.length && num[i]==num[i+1]){
+            i++;
+        }
+    }
+    list.remove(list.size()-1);
+}
+    
 //recursion method
 public class Solution {
     public void combine(int[] c, int start, ArrayList<Integer>cur, int sum, int target, ArrayList<ArrayList<Integer>>col){
