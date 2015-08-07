@@ -1,3 +1,30 @@
+def threeSum(numbers):
+    # write your code here
+    numbers.sort()
+    ret=[]
+    i=0
+    while i < len(numbers) :
+        j=i+1
+        k=len(numbers)-1
+        while j<k :
+            sum = numbers[i] + numbers[j] + numbers[k]
+            if sum > 0:
+                k=k-1
+                while (j<k and numbers[k]==numbers[k+1]):
+                    k=k-1
+                continue
+            elif sum == 0:
+                list = [numbers[i], numbers[j], numbers[k]];
+                ret.append(list);
+  
+            j=j+1
+            while j<k and numbers[j]==numbers[j-1]:
+                j=j+1
+        i+=1
+        while(i<len(numbers) and numbers[i]==numbers[i-1]):
+            i+=1
+    return ret;
+
 /*
   Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
 
