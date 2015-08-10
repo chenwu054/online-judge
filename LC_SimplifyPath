@@ -1,3 +1,23 @@
+def simplifyPath(self,path):
+    # Write your code here
+    a = path.split("/")
+    ret = []
+    for i in range(len(a)):
+        if len(a[i]) > 0:
+            if a[i]==".." :
+                if len(ret)>0:
+                    ret.pop();
+            elif a[i]==".":
+                continue
+            else:
+                ret.append(a[i])
+    str=""
+    for i in range(len(ret)):
+        str = str+"/"+ret[i]
+    if len(str)==0:
+        str="/"
+    return str
+
 /*
 Given an absolute path for a file (Unix-style), simplify it.
 
