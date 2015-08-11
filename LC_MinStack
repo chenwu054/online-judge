@@ -1,3 +1,29 @@
+class MinStack(object):
+
+    def __init__(self):
+        # do some intialize if necessary
+        self.k1 = []
+        self.k2 = []
+        
+    def push(self, x):
+        # write yout code here
+        self.k1.append(x)
+        if len(self.k2)==0 or x<=self.k2[-1]:
+            self.k2.append(x)
+        
+    def pop(self):
+        # pop and return the top item in stack
+        ret = self.k1.pop()
+        if(len(self.k2)>0 and ret==self.k2[-1]):
+            self.k2.pop()
+        return ret
+            
+    def min(self):
+        # return the minimum number in stack
+        if(len(self.k2)>0):
+            return self.k2[-1]
+        return None
+
 /*
 Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
 
