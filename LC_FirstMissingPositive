@@ -1,3 +1,28 @@
+class Solution:
+    # @param A, a list of integers
+    # @return an integer
+    def swap(self,a,i,j):
+        temp = a[i]
+        a[i]=a[j]
+        a[j]=temp
+        
+    def firstMissingPositive(self, a):
+        # write your code here
+        if a==None or len(a)==0:
+            return 1
+        i=0
+        while i<len(a):
+        //condition: index + 1 == value
+        //constraint: in range (0,len(a)] and current is incorrect and the correspondent is incorrect either!!
+            while a[i]>0 and a[i]<=len(a) and a[i]!=i+1 and a[a[i]-1]!=a[i]:
+                self.swap(a,i,a[i]-1)
+            i+=1
+        for i in range(len(a)):
+            if a[i]!=i+1:
+                return i+1
+        return len(a)+1
+
+
 /*
   Given an unsorted integer array, find the first missing positive integer.
 
