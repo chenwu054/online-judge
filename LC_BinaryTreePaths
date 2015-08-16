@@ -1,0 +1,54 @@
+/*
+Given a binary tree, return all root-to-leaf paths.
+
+For example, given the following binary tree:
+
+   1
+ /   \
+2     3
+ \
+  5
+All root-to-leaf paths are:
+
+["1->2->5", "1->3"]
+*/
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> ret=new ArrayList<String>();
+        recursivePrintBTPath(root,ret,new StringBuilder());
+        return ret;
+    }
+    public void recursivePrintBTPath(TreeNode root, List<String> ret, StringBuilder sb){
+        if(root==null){
+            return;
+        }
+        int len = sb.length();
+        if(len==0){
+            sb.append(root.val);
+        }
+        else{
+            sb.append("->"+root.val);
+        }
+        if(root.left==null&&root.right==null){
+            ret.add(sb.toString());
+        }
+        else{
+            if(root.left!=null){
+                recursivePrintBTPath(root.left,ret,sb);
+            }
+            if(root.right!=null){
+                recursivePrintBTPath(root.right,ret,sb);
+            }
+        }
+        sb.delete(len,sb.length());
+    }
+}
