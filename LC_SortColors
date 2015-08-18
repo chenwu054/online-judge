@@ -1,3 +1,29 @@
+class Solution:
+    """
+    @param nums: A list of integer which is 0, 1 or 2 
+    @return: nothing
+    """
+    def sortColors(self, nums):
+        # write your code here
+        n=len(nums)
+        i,j,k=0,0,n-1
+        while j<=k:
+            while j<=k and nums[j]==1:
+                j+=1
+            if j<=k:
+                if nums[j]==0:
+                    temp=nums[j];
+                    nums[j]=nums[i]
+                    nums[i]=temp
+                    i+=1
+                    j+=1
+                elif nums[j]==2:
+                    temp=nums[j]
+                    nums[j]=nums[k]
+                    nums[k]=temp
+                    k-=1
+                    
+
 /*
   Given an array with n objects colored red, white or blue, sort them so that objects of the same color are adjacent, with the colors in the order red, white and blue.
 
