@@ -1,0 +1,43 @@
+/*
+Given an integer array, find a subarray with sum closest to zero. Return the indexes of the first number and last number.
+Have you met this question in a real interview?
+Example
+
+Given [-3, 1, 1, -3, 5], return [0, 2], [1, 3], [1, 1], [2, 2] or [0, 4]
+Challenge
+
+O(nlogn) time
+
+
+*/
+from operator import itemgetter
+
+class Solution:
+    """
+    @param nums: A list of integers
+    @return: A list of integers includes the index of the first number 
+             and the index of the last number
+    """
+    def subarraySumClosest(self, nums):
+        # write your code here
+        if nums==None or len(nums)<1:
+            return None
+        sumArray = []
+        tot=0
+        n=len(nums)
+        for i in range(n):
+            tot+=nums[i]
+            sumArray.append((tot,i))
+        sumArray.append((0,-1))
+        sumArray.sort(key=itemgetter(0))
+        minDiff=abs(sumArray[1][0]-sumArray[0][0])
+        ret=[min(sumArray[1][1],sumArray[0][1])+1,max(sumArray[1][1],sumArray[0][1])]
+        for i in range(2,len(sumArray)):
+            if minDiff>abs(sumArray[i][0]-sumArray[i-1][0]):
+                minDiff=abs(sumArray[i][0]-sumArray[i-1][0])
+                ret=[min(sumArray[i][1],sumArray[i-1][1])+1,max(sumArray[i][1],sumArray[i-1][1])]
+        # ret=[]
+        # for i in range(1,len(sumArray)):
+        #     if abs(sumArray[i][0]-sumArray[i-1][0])==minDiff:
+        #         ret.append([min(sumArray[i][1],sumArray[i-1][1])+1,max(sumArray[i][1],sumArray[i-1][1])])
+        return ret
