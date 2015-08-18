@@ -1,3 +1,32 @@
+class Solution:
+    """
+    @param num, a list of integer
+    @return an integer
+    """
+    def longestConsecutive(self, num):
+        # write your code here
+        numSet=set([])
+        for  i in num:
+            numSet.add(i)
+        maxLen = 0
+        for i in num:
+            if i in numSet:
+                l = 1
+                j = i+1
+                while j in numSet:
+                    l+=1
+                    numSet.remove(j)
+                    j+=1
+                j = i-1
+                while j in numSet:
+                    l+=1
+                    numSet.remove(j)
+                    j-=1
+                maxLen=max(maxLen,l)
+
+        return maxLen
+
+
 /*
   Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
 
