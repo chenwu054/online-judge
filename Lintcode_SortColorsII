@@ -1,0 +1,39 @@
+/*
+Given an array of n objects with k different colors (numbered from 1 to k), sort them so that objects of the same color are adjacent, with the colors in the order 1, 2, ... k.
+Have you met this question in a real interview?
+Example
+
+Given colors=[3, 2, 2, 1, 4], k=4, your code should sort colors in-place to [1, 2, 2, 3, 4].
+Note
+
+You are not suppose to use the library's sort function for this problem.
+Challenge
+
+A rather straight forward solution is a two-pass algorithm using counting sort. That will cost O(k) extra memory. Can you do it without using extra memory?
+
+*/
+#wont pass the last one, time limit exceeded
+def sortColors2(self, colors, k):
+        # write your code here
+        n = len(colors)
+        index = [n-1 for i in range(k+1)]
+        index[0]=index[1]=0
+        while index[1]<n:
+            while index[1]<n and colors[index[1]]==1:
+                index[1]+=1
+            for j in range(2,k+1):
+                if index[1]>index[j]:
+                    return
+            i = colors[index[1]]
+            while i!=1:
+                temp = colors[index[i]]
+                colors[index[i]]=i
+                index[i]-=1
+                for j in range(2,i):
+                    index[j]=min(index[j],index[i])
+                
+                if index[i]<index[1]:
+                    return
+                i=temp
+            colors[index[1]]=i
+            index[1]+=1
