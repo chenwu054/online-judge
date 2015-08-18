@@ -12,28 +12,35 @@ Challenge
 A rather straight forward solution is a two-pass algorithm using counting sort. That will cost O(k) extra memory. Can you do it without using extra memory?
 
 */
-#wont pass the last one, time limit exceeded
-def sortColors2(self, colors, k):
+class Solution:
+    """
+    @param colors: A list of integer
+    @param k: An integer
+    @return: nothing
+    """
+    def sortColors2(self, colors, k):
         # write your code here
         n = len(colors)
         index = [n-1 for i in range(k+1)]
         index[0]=index[1]=0
-        while index[1]<n:
-            while index[1]<n and colors[index[1]]==1:
-                index[1]+=1
-            for j in range(2,k+1):
-                if index[1]>index[j]:
-                    return
-            i = colors[index[1]]
-            while i!=1:
-                temp = colors[index[i]]
+        for i in range(1,k+1):
+            j=index[i-1]
+            while j<n and colors[j]==i:
+                j+=1
+            index[i]=j
+            if j>=n :
+                break;
+        while index[k]<n:
+            while index[k]<n and colors[index[k]]==k:
+                index[k]+=1
+            if index[k]<n:
+                i = colors[index[k]]
+                while index[i]<index[k]:
+                    temp=colors[index[i]]
+                    colors[index[i]]=i
+                    index[i]+=1
+                    i=temp
                 colors[index[i]]=i
-                index[i]-=1
-                for j in range(2,i):
-                    index[j]=min(index[j],index[i])
-                
-                if index[i]<index[1]:
-                    return
-                i=temp
-            colors[index[1]]=i
-            index[1]+=1
+                index[i]+=1
+                for j in range(1,k+1): #very important!! must be at least last index, if there is no such value, the invariant
+                    index[j]=max(index[j],index[j-1])
