@@ -17,6 +17,7 @@ class Solution:
     @param colors: A list of integer
     @param k: An integer
     @return: nothing
+    solution: the last index is the front, and throw the current back to its index and propogate to front
     """
     def sortColors2(self, colors, k):
         # write your code here
