@@ -17,7 +17,34 @@ class Solution:
                 newList.append(c)
                 ret.append(newList)
         return ret
-
+        
+class Solution:
+    """
+    @param S: A set of numbers.
+    @return: A list of lists. All valid subsets.
+    """
+    def subsetsWithDup(self, s):
+        # write your code here
+        ret=[]
+        ret.append([])
+        if s==None or len(s)==0:
+            return ret
+        s.sort()
+        last,cur=0,1
+        for i in range(len(s)):
+            j = last
+            cur=len(ret)
+            while j<cur:
+                newList=ret[j][:]
+                newList.append(s[i])
+                ret.append(newList)
+                j+=1
+            if i+1<len(s) and s[i]==s[i+1]:
+                last=cur
+            else:
+                last = 0
+        return ret
+        
 
 /*
 
