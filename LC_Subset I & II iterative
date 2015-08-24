@@ -1,3 +1,24 @@
+class Solution:
+    """
+    @param S: The set of numbers.
+    @return: A list of lists. See example.
+    """
+    def subsets(self, s):
+        # write your code here
+        ret = []
+        ret.append([])
+        if s==None or len(s)==0:
+            return ret
+        s.sort()
+        for c in s:
+            l = len(ret)
+            for i in range(l):
+                newList = ret[i][:]
+                newList.append(c)
+                ret.append(newList)
+        return ret
+
+
 /*
 
   Given a collection of integers that might contain duplicates, S, return all possible subsets.
