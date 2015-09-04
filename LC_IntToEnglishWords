@@ -1,0 +1,95 @@
+/*
+Convert a non-negative integer to its english words representation. Given input is guaranteed to be less than 231 - 1.
+
+For example,
+123 -> "One Hundred Twenty Three"
+12345 -> "Twelve Thousand Three Hundred Forty Five"
+1234567 -> "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+
+test cases:
+1234567
+10
+100
+101
+1000
+1001
+12345
+0 - 100
+*/
+public class Solution {
+    public String[] numStr = {"Zero", "One", "Two", "Three", "Four", "Five",
+                            "Six", "Seven", "Eight", "Nine", "Ten", "Eleven",
+                            "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+                            "Seventeen", "Eighteen", "Nineteen", "Twenty"};
+    public String[] decimalStr = {"Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy",
+                                "Eighty", "Ninety", "Hundred", "Thousand", "Million", "Billion"};
+    char zeroChar = '0';
+    char twoChar = '2';
+    public String parseNumString(String str, int start, int end) {
+        StringBuilder sb = new StringBuilder();
+        if(end - start == 2) { // three digits
+            if(str.charAt(start) != zeroChar) {
+                sb.append(numStr[str.charAt(start) - zeroChar])
+                .append(" ")
+                .append(decimalStr[8])
+                .append(" "); // hundred
+            }
+            start++;
+        }
+        if(end - start == 1) { // two digits
+            char ch = str.charAt(start);
+            if(ch != zeroChar) {
+            	if(ch < twoChar){
+                    sb.append(numStr[Integer.parseInt(str.substring(start, end+1)) - 0]).append(" ");
+                }
+                else { // >= 20
+                    sb.append(decimalStr[ch - zeroChar - 2]).append(" ");
+                    if(str.charAt(end) > '0') {
+                        sb.append(numStr[str.charAt(end) - zeroChar]).append(" ");
+                    }
+                }
+                return sb.toString();
+            }
+            start++;
+        }
+        if(end - start == 0 ) { //one digit
+            char ch = str.charAt(start);
+            if(sb.length() == 0 || ch != '0'){
+            	sb.append(numStr[ch - zeroChar]).append(" ");
+            }
+        }
+        return sb.toString();
+    }
+    public String numberToWords(int num) {
+        String str = String.valueOf(num);
+        int n = str.length();
+        StringBuilder sb = new StringBuilder();
+        int start = 0;
+        int i = (n - 1) / 3;
+        if(n % 3 != 0) {
+            int end = n - n / 3 * 3 - 1;
+            String leadingNum = parseNumString(str, 0, end);
+            sb.append(leadingNum);
+            start = end + 1;
+            if(i > 0) {
+                sb.append(decimalStr[i + 8]).append(" ");
+            }
+            i--;
+        }
+        
+        while(i >= 0) {
+            String partStr = parseNumString(str, start, start + 2);
+            // only none zero or when if there is only "Zero" 
+            if(!partStr.startsWith(numStr[0]) || sb.length() == 0){
+                sb.append(partStr);    
+            }
+            // only none zero and not the last 3 digits
+            if(!partStr.startsWith(numStr[0]) && i > 0) {
+                sb.append(decimalStr[i + 8]).append(" ");
+            }
+            i--;
+            start += 3;
+        }
+        return sb.deleteCharAt(sb.length()-1).toString();
+    }
+}
