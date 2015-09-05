@@ -43,6 +43,55 @@ What are the possible values of h-index?
 A faster approach is to use extra space.
 
 */
+// using quick select - O(n)
+public class Solution {
+    public void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+    
+    public int hIndex(int[] c) {
+        if(c == null || c.length == 0) {
+            return 0;
+        }
+        // binary search 
+        int n = c.length, s = 0, e = n - 1, m = 0;
+        int maxH = 0;
+        while(s <= e) {// important allow equal 
+            m = s + ((e - s) >> 1);
+            int ts = s, te = e, p = c[m];
+            swap(c, m, ts);
+            ts++;
+            while(ts <= te) { // important allow equal
+                while(ts <= te && c[ts] <= p) { // invariant: ts is the first one uncertain.
+                    c[ts - 1] = c[ts];
+                    ts++;
+                }
+                while(ts <= te && c[te] > p) { // invariant: te is the first one uncertain.
+                    te--;
+                }
+                if(ts < te) { // swap only when they are not equal. does not matter. NO need to increment/decrement 
+                    swap(c, te, ts);
+                }
+            }
+            c[te] = p; // set te to be the pivot, since we used c[ts]<=p, so te is the last that is <= p, which should be pivot
+            if(n - te == c[te]) {
+                return n - te;
+            }
+            if(n - te < c[te]) {
+                 maxH = Math.max(maxH, n - te);
+                 e = te - 1;
+            }
+            else {
+                maxH = Math.max(maxH, c[te]);
+                s = te + 1;
+            }
+        }
+        return maxH;
+    }
+}
+
 public class Solution {
     public int hIndex(int[] c) {
         if(c == null || c.length == 0) {
