@@ -4,6 +4,40 @@ Given an integer, convert it to a roman numeral.
 Input is guaranteed to be within the range from 1 to 3999.
 */
 public class Solution {
+    public String intToRoman(int num) {
+        // char[] map = ['I','V','X','L','C','D','M'];
+        char[] fives = {'V','L','D'}; // 5, 50, 500
+        char[] ones = {'I','X','C','M'}; // 1, 10, 100, 1000
+        String val = String.valueOf(num);
+        int[] input = new int[4];
+        for(int i = 0; i < val.length(); i++) {
+            input[4 - val.length() + i] = val.charAt(i) - '0';
+        }
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < input.length; i++) {
+            if(input[i] == 9) {
+                sb.append(ones[ones.length - 1 - i]).append(ones[ones.length - i]);
+            }
+            else if(input[i] == 4) {
+                sb.append(ones[ones.length - 1 - i]).append(fives[fives.length - i]);
+            }
+            else if (input[i] > 4) {
+                sb.append(fives[fives.length - i]);
+                for(int j = 0; j < input[i] - 5; j++) {
+                    sb.append(ones[ones.length - 1 - i]);
+                }
+            }
+            else if(input[i] > 0){
+                for(int j = 0; j < input[i]; j++) {
+                    sb.append(ones[ones.length - 1 - i]);
+                }
+            }
+        }
+        return sb.toString();
+    }
+}
+
+public class Solution {
     static char[] ten = {'I','X','C','M'};
     static char[] five={'V','L','D'};
     public String intToRoman(int num) {
