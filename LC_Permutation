@@ -1,3 +1,45 @@
+
+public class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        if(nums == null || nums.length == 0) {
+            return ret;
+        }
+        helper(nums, 0, ret);
+        return ret;
+    }
+    public void helper(int[] nums, int start, List<List<Integer>> ret) {
+        if(start == nums.length) {
+            List<Integer> toAdd = new ArrayList<Integer>();
+            for(int i : nums) {
+                toAdd.add(i);
+            }
+            ret.add(toAdd);
+            return;
+        }
+        for(int i = start; i < nums.length; i++) {
+            boolean canUse = true;
+            for(int j = i - 1; j >= start; j--) {
+                if(nums[i] == nums[j]) {
+                    canUse = false;
+                    break;
+                }
+            }
+            if(canUse) {
+                swap(nums, i, start);
+                helper(nums, start + 1, ret);
+                swap(nums, i, start);
+            }
+        }
+    }
+    public void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+}
+
+
 /*
  Given a collection of numbers, return all possible permutations.
 
