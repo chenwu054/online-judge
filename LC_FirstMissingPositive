@@ -23,6 +23,33 @@ class Solution:
         return len(a)+1
 
 
+public class Solution {
+    public int firstMissingPositive(int[] nums) {
+        if(nums == null || nums.length == 0) {
+            return 1;
+        }
+        int i = 0;
+        while(i < nums.length) {
+            while(nums[i] != i + 1 && nums[i] > 0 && nums[i] <= nums.length && nums[nums[i] - 1] != nums[i]) {
+                swap(nums, i, nums[i] - 1);
+            }
+            i++;
+        }
+
+        for(i = 0; i < nums.length; i++) {
+            if(nums[i] != i + 1) {
+                return i+1;
+            }
+        }
+        return nums.length + 1;
+    }
+    public void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+}
+
 /*
   Given an unsorted integer array, find the first missing positive integer.
 
