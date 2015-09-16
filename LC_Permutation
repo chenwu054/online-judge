@@ -18,7 +18,7 @@ public class Solution {
             return;
         }
         for(int i = start; i < nums.length; i++) {
-            boolean canUse = true;
+            boolean canUse = true; // this is to guarantee the uniqueness
             for(int j = i - 1; j >= start; j--) {
                 if(nums[i] == nums[j]) {
                     canUse = false;
