@@ -1,3 +1,34 @@
+public class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int[] ret = null;
+        if(nums.length == 0) {
+            ret = new int[0];
+            return ret;
+        }
+        LinkedList<Integer> list = new LinkedList<Integer>();
+        for(int i = 0; i < k - 1; i++) {
+            while(!list.isEmpty() && list.peekLast() < nums[i]) {
+                list.pollLast();
+            }
+            list.offerLast(nums[i]);
+        }
+        ret = new int[nums.length - k + 1];
+        for(int i = 0; i <= nums.length - k; i++) {
+            while(!list.isEmpty() && list.peekLast() < nums[k - 1 + i]) {
+                list.pollLast();
+            }
+            list.offerLast(nums[k - 1 + i]);
+            ret[i] = list.peekFirst();
+            if(list.size() == k || list.peekFirst() == nums[i]) {
+                list.pollFirst();
+            }
+        }
+        return ret;
+    }
+}
+
+
 /*
 Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
 
