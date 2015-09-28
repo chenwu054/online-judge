@@ -1,0 +1,26 @@
+/*
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate element must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+Note:
+You must not modify the array (assume the array is read only).
+You must use only constant extra space.
+Your runtime complexity should be less than O(n2).
+*/
+public class Solution {
+    public int findDuplicate(int[] nums) {
+        int n = nums.length - 1;
+        
+        for(int i = 1; i <= n; i++) {
+            int count = 0;
+            for(int j = 0; j <= n; j++) {
+                if(nums[j] == i) {
+                    count++;
+                }
+                if(count == 2) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+}
