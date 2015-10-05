@@ -1,0 +1,48 @@
+/*
+Given a pattern and a string str, find if str follows the same pattern.
+
+Examples:
+
+    pattern = "abba", str = "dog cat cat dog" should return true.
+    pattern = "abba", str = "dog cat cat fish" should return false.
+    pattern = "aaaa", str = "dog cat cat dog" should return false.
+    pattern = "abba", str = "dog dog dog dog" should return false.
+
+Notes:
+
+    Both pattern and str contains only lowercase alphabetical letters.
+    Both pattern and str do not have leading or trailing spaces.
+    Each word in str is separated by a single space.
+    Each letter in pattern must map to a word with length that is at least 1.
+
+*/
+public class Solution {
+    public boolean wordPattern(String pattern, String str) {
+        if(pattern == null || pattern.length() == 0) {
+            return str == null || str.length() == 0;
+        }
+        Map<Character, String> map1  = new HashMap<Character, String>();
+        Map<String, Character> map2 = new HashMap<String, Character>();
+        String[] words = str.split(" ");
+        if(words.length != pattern.length()) {
+            return false;
+        }
+        for(int i = 0; i < pattern.length(); i++) {
+            char c = pattern.charAt(i);
+            String word = words[i];
+            if(!map1.containsKey(c) && !map2.containsKey(word)) {
+                map1.put(c, word);
+                map2.put(word, c);
+            }
+            else if(map1.containsKey(c) && map2.containsKey(word)) {
+                if(!map1.get(c).equals(word) || map2.get(word) != c) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
