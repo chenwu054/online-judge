@@ -17,6 +17,9 @@ In this question, we represent the board using a 2D array. In principle, the boa
 /*
 In place: 
 Solution: use bit map. set the new value to another bit
+
+follow up 2: Start from a center value and propergate to the edges and check the last value, denoted by bit position.
+
 */
 public class Solution {
     public void gameOfLife(int[][] board) {
