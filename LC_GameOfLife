@@ -52,21 +52,20 @@ public class Solution {
             tot += getColLiveNeighborNum(board, row + 1, col);
         }
         tot += getColLiveNeighborNum(board, row, col);
+        tot -= board[row][col];
         return tot;
     }
     public int getColLiveNeighborNum(int[][] board, int row, int col) {
         int tot = 0;
         if(col > 0 && board[row][col - 1] > 0) {
-                tot += 1;
-            }
-            if(board[row][col] > 0) {
-                tot += 1;
-            }
-            if(col < board[0].length - 1 && board[row][col + 1] > 0) {
-                tot += 1;   
+            tot += 1;
+        }
+        if(board[row][col] > 0) {
+            tot += 1;
+        }
+        if(col < board[0].length - 1 && board[row][col + 1] > 0) {
+            tot += 1;   
         }  
         return tot;
     }
-    
-    
 }
