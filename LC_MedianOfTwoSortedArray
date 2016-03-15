@@ -1,3 +1,38 @@
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number}
+ */
+function findKthNumber(nums1, start1, nums2, start2, k) {
+    if(start1===nums1.length) {
+        return nums2[start2 + k - 1];
+    } 
+    if(start2===nums2.length) {
+        return nums1[start1 + k - 1];
+    }
+    if(k === 1) {
+        return Math.min(nums1[start1], nums2[start2]);
+    }
+    var n = Math.min(k/2, Math.min(nums1.length-start1, nums2.length-start2));
+    n=n|0;
+    if(nums1[start1 + n - 1] < nums2[start2 + n - 1]) {
+        return findKthNumber(nums1, start1 + n, nums2, start2, k - n);
+    } else {
+        return findKthNumber(nums1, start1, nums2, start2 + n, k - n);
+    }
+}
+var findMedianSortedArrays = function(nums1, nums2) {
+    var n=nums1.length;
+    var m=nums2.length;
+    if((n + m) % 2 === 0) {
+        var a = findKthNumber(nums1, 0, nums2, 0, ((n+m)/2|0) + 1);
+        var b = findKthNumber(nums1, 0, nums2, 0, (n+m)/2);
+        return (a + b)/2;
+    } else {
+        return findKthNumber(nums1, 0, nums2, 0, ((n+m)/2|0)+1);
+    }
+};
+
 /*
   There are two sorted arrays A and B of size m and n respectively. Find the median of the two sorted arrays. 
   The overall run time complexity should be O(log (m+n)).
