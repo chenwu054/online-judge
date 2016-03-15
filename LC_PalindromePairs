@@ -1,3 +1,50 @@
+/**
+ * @param {string[]} words
+ * @return {number[][]}
+  TIME limit exceeded!
+ */
+ function isPalin(string) {
+	if(string.length === 0) {
+		return true;
+	}
+	var n = string.length;
+	for(var i=0; i<n/2; i++) {
+		if(string.charAt(i) !== string.charAt(n-i-1)) {
+			return false;
+		}
+	}
+	return true;
+}
+var palindromePairs = function(words) {
+    var ret = [];
+	if(words === undefined || words.length < 2) {
+		return ret;
+	}
+	var map = {};
+	var n = words.length;
+	for(var i=0; i<n; i++) {
+		map[words[i]] = i;
+	}
+	for(i=0; i<n; i++) {
+		var w = words[i];
+		var m = w.length;
+		for(var j=0;j<=m; j++) {
+			var pref = w.substring(0,j).split('').reverse().join('');
+			var suff = w.substring(j);
+			var rs = suff.split('').reverse().join('');
+			if(map[rs]!==undefined && isPalin(pref) && map[rs]!==i && w.length > words[map[rs]].length) {
+				ret.push([map[rs], i]);
+			}
+			if(map[pref]!==undefined && isPalin(suff) && map[pref]!==i) {
+				ret.push([i, map[pref]]);
+			}
+		}
+	}
+    return ret;
+};
+
+
+
 /*
 Given a list of unique words. Find all pairs of distinct indices (i, j) in the given list, so that the concatenation of the two words, i.e. words[i] + words[j] is a palindrome.
 
