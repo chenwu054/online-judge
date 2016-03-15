@@ -38,6 +38,7 @@ public class Solution {
                 if(map.containsKey(reverseSuffix) 
                     && isPalin(reversePrefix) 
                     && map.get(reverseSuffix) != i 
+                    // this is for the case: "" "aba", where it is only added once(listed in the next if case)
                     && word.length() > words[map.get(reverseSuffix)].length()) {
                     List<Integer> newList = new ArrayList<Integer>();
                     newList.add(map.get(reverseSuffix));
@@ -46,8 +47,7 @@ public class Solution {
                 }
                 if(map.containsKey(reversePrefix) 
                     && isPalin(suffix) 
-                    && map.get(reversePrefix) != i 
-                    && word.length() >= words[map.get(reversePrefix)].length()) {
+                    && map.get(reversePrefix) != i ) {
                     List<Integer> newList = new ArrayList<Integer>();
                     newList.add(i);
                     newList.add(map.get(reversePrefix));
