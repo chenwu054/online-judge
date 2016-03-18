@@ -1,3 +1,79 @@
+public class Solution {
+    /*
+    1. find leaf node
+    2. find the longest path from the leaf node
+    3. get the mid items 
+    
+    */
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> ret = new ArrayList<Integer>();
+        if(n == 0) {
+            return ret;
+        } else if(n==1) {
+            ret.add(0);
+            return ret;
+        }
+        Map<Integer, Set<Integer>> graph = new HashMap<Integer, Set<Integer>>();
+        for(int i = 0; i< edges.length; i++) {
+            int[] a = edges[i];
+            if(!graph.containsKey(a[0])) {
+                graph.put(a[0], new HashSet<Integer>());
+            }
+            if(!graph.containsKey(a[1])) {
+                graph.put(a[1], new HashSet<Integer>());
+            }
+            graph.get(a[0]).add(a[1]);
+            graph.get(a[1]).add(a[0]);
+        }
+        int[] p = new int[n];
+        int[] last = new int[1];
+        bfs(0, graph, p, last);
+        int first = last[0];
+        int l = bfs(first, graph, p, last);
+        if(l % 2 == 0) {
+            ret.add(fillKthNode(last[0], l/2, p));
+        } 
+        ret.add(fillKthNode(last[0], l/2+1, p));
+        return ret;
+    }
+    private int fillKthNode(int start, int k, int[] p) {
+        while(k > 1) {
+            start = p[start];
+            k--;
+        }
+        return start;
+    }
+    public int bfs(int start, Map<Integer, Set<Integer>> graph, int[] p, int[] last) {
+        Queue<Integer> q = new LinkedList<Integer>();
+        Queue<Integer> next = new LinkedList<Integer>();
+        Queue<Integer> temp;
+        q.add(start);
+        int l = 0;
+        p[start] = start;
+        Set<Integer> visited = new HashSet<Integer>();
+        visited.add(start);
+        while(!q.isEmpty()) {
+            while(!q.isEmpty()) {
+                int cur = q.poll();
+                last[0] = cur;
+                Set<Integer> neighbor = graph.get(cur);
+                for(Integer n : neighbor) {
+                    if(!visited.contains(n)) {
+                        visited.add(n);
+                        next.add(n);
+                        p[n] = cur;
+                    }
+                }
+            }    
+            l++;
+            temp = q;
+            q = next;
+            next= temp;
+        }
+        return l;
+    }
+}
+
 /*
 For a undirected graph with tree characteristics, we can choose any node as the root. 
 The result graph is then a rooted tree. 
