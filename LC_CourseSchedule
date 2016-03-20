@@ -1,3 +1,54 @@
+
+/*
+Two levels:
+used: the global, that have used in dfs, verified no loop
+visited, the current loop, should not contain any overlop. otherwise return false.
+*/
+public class Solution {
+    public boolean canFinish(int numCourses, int[][] pre) {
+        if(numCourses <2 || pre.length == 0) {
+            return true;
+        }
+        Map<Integer, Set<Integer>> map = new HashMap<Integer,Set<Integer>>();
+        for(int i = 0; i< pre.length; i++) {
+            int[] re = pre[i];
+            if(!map.containsKey(re[0])) {
+                map.put(re[0],new HashSet<Integer>());
+            }
+            map.get(re[0]).add(re[1]);
+        }
+        Set<Integer> used = new HashSet<Integer>();
+        Set<Integer> visited = new HashSet<Integer>();
+        for(int i = 0; i<numCourses;i++) {
+            boolean ret = dfs(map, i, used, visited);
+            if(!ret) {
+                return false;
+            }
+            
+        }
+        return true;
+    }
+    public boolean dfs(Map<Integer, Set<Integer>>map, int start, Set<Integer> used, Set<Integer>visited) {
+        if(used.contains(start)) {
+            return true;
+        }
+        if(visited.contains(start)) {
+            return false;
+        }
+        visited.add(start);
+        if(map.containsKey(start)) {
+            for(Integer n : map.get(start)) {
+                if(!dfs(map, n, used, visited)) { 
+                    return false;
+                }
+            }    
+        }
+        used.add(start);
+        visited.remove(start);
+        return true;
+    }
+}
+
 /*
 There are a total of n courses you have to take, labeled from 0 to n - 1.
 
