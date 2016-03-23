@@ -1,6 +1,70 @@
 /*
 A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
 
+Find all strobogrammatic numbers that are of length = n.
+
+For example,
+Given n = 2, return ["11","69","88","96"].
+*/
+public class Solution {
+    char[] a = {'0','1','8','6','9'};
+    public List<String> findStrobogrammatic(int n) {
+        List<String> ret = new ArrayList<String>();
+        if(n == 0) {
+            return ret;
+        }
+        Map<Character, Character> map = new HashMap<Character, Character>();
+        map.put('0','0');
+        map.put('1','1');
+        map.put('8','8');
+        map.put('9','6');
+        map.put('6','9');
+        
+        add(new StringBuilder(), n / 2, n%2 ==1, ret, map);
+        return ret;
+    }
+    public void add(StringBuilder sb, int left, boolean isOdd, List<String> list, Map<Character, Character> map) {
+        if(left == 0) {
+            buildString(sb, isOdd, list,map);
+            return;
+        }
+        int n = sb.length();
+        sb.append('1');
+        for(int i = 0; i<a.length;i++) {
+            sb.setCharAt(n, a[i]);
+            add(sb, left - 1,isOdd,  list, map);
+        }
+        sb.deleteCharAt(n);
+    }
+    private void buildString(StringBuilder sb, boolean isOdd, List<String> list, Map<Character, Character> map) {
+        if(sb.length() > 0 && sb.charAt(0) =='0') {
+            return;
+        }
+        if(isOdd) {
+            StringBuilder ret = null;
+            for(int i = 0; i<3;i++) {
+                ret = new StringBuilder(sb);
+                ret.append(a[i]);
+                for(int j = ret.length()-2; j>=0; j--) {
+                    ret.append(map.get(sb.charAt(j)));
+                }
+                list.add(ret.toString());
+            }
+        } else {
+            StringBuilder ret = new StringBuilder(sb);
+            for(int i = ret.length() -1; i>=0; i--) {
+                ret.append(map.get(sb.charAt(i)));
+            }
+            list.add(ret.toString());
+        }
+    }
+}
+
+
+
+/*
+A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
+
 Write a function to determine if a number is strobogrammatic. The number is represented as a string.
 
 For example, the numbers "69", "88", and "818" are all strobogrammatic.
