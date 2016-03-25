@@ -1,3 +1,28 @@
+public class Solution {
+    public int rob(int[] nums) {
+        if(nums==null || nums.length == 0) {
+            return 0;
+        }
+        int n = nums.length;
+        if(n == 1) {
+            return nums[0];
+        }
+        if(n == 2) {
+            return Math.max(nums[0], nums[1]);
+        }
+        return Math.max(helper(nums, 0, n-2), helper(nums, 1, n-1));
+    }
+    int helper(int[] a, int start, int end) {
+        int prev2 = a[start], prev = Math.max(a[start+1], prev2), cur = Math.max(prev, prev2);
+        for(int i = start + 2; i<=end;i++) {
+            cur = Math.max(prev2 + a[i], prev);
+            prev2 = prev;
+            prev = cur;
+        }
+        return cur;
+    }
+}
+
 /*
 Note: This is an extension of House Robber.
 
