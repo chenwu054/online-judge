@@ -1,0 +1,27 @@
+/*
+Write a function to generate the generalized abbreviations of a word.
+
+Example:
+Given word = "word", return the following list (order does not matter):
+["word", "1ord", "w1rd", "wo1d", "wor1", "2rd", "w2d", "wo2", "1o1d", "1or1", "w1r1", "1o2", "2r1", "3d", "w3", "4"]
+Show Company Tags
+Show Tags
+Show Similar Problems
+
+*/
+public class Solution {
+    public List<String> generateAbbreviations(String word) {
+        List<String> ret = new ArrayList<String>();
+        dfs(word, ret, 0, new StringBuilder(), 0);
+        return ret;
+    }
+    
+    private void dfs(String word, List<String> ret, int count, StringBuilder cur, int start) {
+        if(start == word.length()) {
+            ret.add(cur.append((count>0?count:"")).toString());
+            return;
+        }
+        dfs(word, ret, 0, new StringBuilder(cur).append(count>0?count:"").append(word.charAt(start)), start + 1);
+        dfs(word, ret, count+1, cur, start + 1);
+    }
+}
