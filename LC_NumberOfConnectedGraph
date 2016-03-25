@@ -1,0 +1,59 @@
+/*
+Given n nodes labeled from 0 to n - 1 and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.
+
+Example 1:
+     0          3
+     |          |
+     1 --- 2    4
+Given n = 5 and edges = [[0, 1], [1, 2], [3, 4]], return 2.
+
+Example 2:
+     0           4
+     |           |
+     1 --- 2 --- 3
+Given n = 5 and edges = [[0, 1], [1, 2], [2, 3], [3, 4]], return 1.
+*/
+public class Solution {
+    public int countComponents(int n, int[][] edges) {
+        if(n <2) {
+            return n;
+        }
+        int[] id = new int[n];
+        for(int i =0;i < n;i++) {
+            id[i] = i;
+        }
+        Map<Integer, Set<Integer>> map = new HashMap<Integer, Set<Integer>>();
+        // for(int[] a : edges) {
+        //     if(!map.containsKey(a[0])) {
+        //         map.put(a[0], new HashSet<Integer>());
+        //     }
+        //     if(!map.containsKey(a[1])) {
+        //         map.put(a[1], new HashSet<Integer>());
+        //     }
+        //     map.get(a[0]).add(a[1]);
+        //     map.get(a[1]).add(a[0]);
+        // }
+        int count = n;
+        for(int[]a:edges) {
+            int v = getRoot(id, a[0]);
+            int w = getRoot(id, a[1]);
+            if(v != w) {
+                combine(id, v, w);
+                count--;
+            }
+        }
+        return count;
+    }
+    private void combine(int[] a, int i, int j) {
+        a[i] = j;
+    }
+    private int getRoot(int[] a, int i) {
+        while(a[i] != i) {
+            i = a[i];
+        }
+        return i;
+    }
+    
+    
+    
+}
