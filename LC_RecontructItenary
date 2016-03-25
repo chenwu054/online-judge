@@ -1,0 +1,49 @@
+/*
+Given a list of airline tickets represented by pairs of departure and arrival airports [from, to], reconstruct the itinerary in order. All of the tickets belong to a man who departs from JFK. Thus, the itinerary must begin with JFK.
+
+Note:
+If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string. For example, the itinerary ["JFK", "LGA"] has a smaller lexical order than ["JFK", "LGB"].
+All airports are represented by three capital letters (IATA code).
+You may assume all tickets form at least one valid itinerary.
+Example 1:
+tickets = [["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
+Return ["JFK", "MUC", "LHR", "SFO", "SJC"].
+Example 2:
+tickets = [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+Return ["JFK","ATL","JFK","SFO","ATL","SFO"].
+Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","SFO"]. But it is larger in lexical order.
+*/
+public class Solution {
+    public List<String> findItinerary(String[][] tickets) {
+        List<String> list = new ArrayList<String>();
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        for(String[] a : tickets){
+            if(!map.containsKey(a[0])) {
+                map.put(a[0], new ArrayList<String>());
+            }
+            map.get(a[0]).add(a[1]);
+        }
+        for(List<String> l : map.values()) {
+            Collections.sort(l, new Comparator<String>() {
+                public int compare(String a, String b) {
+                    return b.compareTo(a);
+                }
+            });
+        }
+        Stack<String> k = new Stack<String>();
+        k.push("JFK");
+        int n = tickets.length + 1;
+        while(!k.isEmpty()) {
+            String last = k.peek();
+            if(map.containsKey(last) && !map.get(last).isEmpty()) {
+                List<String> l  = map.get(last);
+                k.push(l.remove(l.size() - 1));
+            } else {
+                list.add(k.pop());
+            }
+        }
+        Collections.reverse(list);
+        return list;
+    }    
+}
+
