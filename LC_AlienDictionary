@@ -1,0 +1,94 @@
+/*
+There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
+
+For example,
+Given the following words in dictionary,
+
+[
+  "wrt",
+  "wrf",
+  "er",
+  "ett",
+  "rftt"
+]
+The correct order is: "wertf".
+
+Note:
+You may assume all letters are in lowercase.
+If the order is invalid, return an empty string.
+There may be multiple valid order of letters, return any one of them is fine.
+*/
+public class Solution {
+    public String alienOrder(String[] words) {
+        if(words == null || words.length == 0) {
+            return "";
+        }
+        Map<Character, Set<Character>> g = buildGraph(words);
+        StringBuilder sb =new StringBuilder();
+        Set<Character> v = new HashSet<Character>();
+        Set<Character> u = new HashSet<Character>();
+        for(Character c : g.keySet()) {
+            if(!u.contains(c)) {
+                if(!dfs(g, c, v, u, sb)) {
+                    return "";
+                }
+                u.addAll(v);
+                v.clear();
+            }
+        }
+        return sb.toString();
+    }
+    boolean dfs(Map<Character, Set<Character>> g, Character c, Set<Character> v, Set<Character> u, StringBuilder sb) {
+        v.add(c);
+        Set<Character> set = g.get(c);
+        if(set!=null) {
+            for(Character n : set) {
+                if(v.contains(n)) {
+                    return false;
+                }
+                if(u.contains(n)) {
+                    continue;
+                }
+                if(!dfs(g, n, v, u, sb)) {
+                    return false;
+                }
+            }    
+        }
+        sb.append(c);
+        return true;
+    }
+    
+    Map<Character, Set<Character>> buildGraph(String[] words) {
+        Map<Character, Set<Character>> g = new HashMap<Character, Set<Character>>();
+        for(int i = 0;i < words[0].length(); i++) {
+            if(!g.containsKey(words[0].charAt(i))) {
+                g.put(words[0].charAt(i), new HashSet<Character>());
+            }
+        }
+        for(int i = 1; i< words.length; i++) {
+            String a = words[i-1];
+            String b = words[i];
+            int j = 0;
+            while(j<Math.min(a.length(), b.length()) && a.charAt(j) == b.charAt(j)) {
+                if(!g.containsKey(a.charAt(j))) {
+                    g.put(a.charAt(j), new HashSet<Character>());
+                }
+                j++;
+            }
+            if(j < Math.min(a.length(), b.length())) {
+                char c= b.charAt(j);
+                if(!g.containsKey(c)) {
+                    g.put(c, new HashSet<Character>());
+                }
+                g.get(c).add(a.charAt(j));
+            }
+            while(j<b.length()) {
+                if(!g.containsKey(b.charAt(j))) {
+                    g.put(b.charAt(j), new HashSet<Character>());
+                }
+                j++;
+            }
+        }
+        return g;
+    }
+}
