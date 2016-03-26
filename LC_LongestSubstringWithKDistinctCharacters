@@ -1,0 +1,48 @@
+/*
+Given a string, find the length of the longest substring T that contains at most 2 distinct characters.
+
+For example, Given s = “eceba”,
+
+T is "ece" which its length is 3.
+*/
+public class Solution {
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        if(s == null ) {
+            return 0;
+        }
+        int n = s.length();
+        if(n<=2) {
+            return n;
+        }
+        int k = 2;
+        int max = 2;
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        TreeMap<Integer,Character> reverse = new TreeMap<Integer,Character>(); 
+        // O(lgk) time for fast lowest index search, could be better using customized doubly linkedlist;
+        int last = 0;
+        for(int i = 0; i<n;i++) {
+            char c = s.charAt(i);
+            if(map.size() == k) {
+                if(!map.containsKey(c)) {
+                    Map.Entry<Integer, Character> e = reverse.pollFirstEntry();
+                    map.remove(e.getValue());
+                    last = e.getKey()+1;
+                } else {
+                    int j = map.get(c);
+                    map.put(c, i);
+                    reverse.remove(j);
+                }
+            } else {
+                if(map.containsKey(c)) {
+                    reverse.remove(map.get(c));
+                }
+            }
+            reverse.put(i, c);
+            map.put(c,i);
+            if(i - last + 1 > max) {
+                max = i-last+1;
+            }
+        }
+        return max;
+    }
+}
