@@ -1,0 +1,67 @@
+/*
+Given two sparse matrices A and B, return the result of AB.
+
+You may assume that A's column number is equal to B's row number.
+
+Example:
+
+A = [
+  [ 1, 0, 0],
+  [-1, 0, 3]
+]
+
+B = [
+  [ 7, 0, 0 ],
+  [ 0, 0, 0 ],
+  [ 0, 0, 1 ]
+]
+
+
+     |  1 0 0 |   | 7 0 0 |   |  7 0 0 |
+AB = | -1 0 3 | x | 0 0 0 | = | -7 0 3 |
+                  | 0 0 1 |
+*/
+public class Solution {
+    public int[][] multiply(int[][] A, int[][] B) {
+        if(A==null || B==null || A.length ==0 || B.length == 0) {
+            return null;
+        }
+        int n1 = A.length, m1 = A[0].length, n2 = B.length, m2 = B[0].length;
+        int[][] ret = new int[n1][m2];
+        Map<Integer,Map<Integer, Integer>> ma= new HashMap<Integer,Map<Integer,Integer>>();
+        Map<Integer,Map<Integer, Integer>> mb= new HashMap<Integer,Map<Integer,Integer>>();
+        convertToMap(A, ma, n1, m1, false);
+        convertToMap(B, mb, n2, m2, true);
+        for(Map.Entry<Integer, Map<Integer, Integer>> ea : ma.entrySet()) {
+            for(Map.Entry<Integer,Map<Integer,Integer>> bb: mb.entrySet()) {
+                int sum = 0;
+                for(Map.Entry<Integer, Integer> it: ea.getValue().entrySet()) {
+                    if(bb.getValue().containsKey(it.getKey())) {
+                        sum+=bb.getValue().get(it.getKey()) * it.getValue();
+                    }
+                }
+                ret[ea.getKey()][bb.getKey()] = sum;
+            }
+        }
+        return ret;
+    }
+    void convertToMap(int[][] a, Map<Integer,Map<Integer, Integer>> map, int n, int m, boolean reverse) {
+        for(int i = 0;i<n;i++) {
+            for(int j = 0; j<m;j++) {
+                if(a[i][j]!=0) {
+                    if(reverse) {
+                        if(!map.containsKey(j)) {
+                            map.put(j, new HashMap<Integer, Integer>());
+                        }    
+                        map.get(j).put(i, a[i][j]);
+                    } else {
+                        if(!map.containsKey(i)) {
+                            map.put(i, new HashMap<Integer, Integer>());
+                        }
+                        map.get(i).put(j, a[i][j]);
+                    }
+                }
+            }
+        }
+    }
+}
