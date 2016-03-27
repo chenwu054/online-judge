@@ -1,3 +1,87 @@
+public class Solution {
+    
+    public int shortestDistance(int[][] grid) {
+        if(grid == null || grid.length == 0) {
+            return -1;
+        }
+        int n = grid.length, m=grid[0].length;
+        int[][] d = new int[n][m];
+        boolean[][] v = new boolean[n][m];
+        int[][]  num = new int[n][m];
+        List<Integer> src = sources(grid);
+        for(Integer s : src) {
+            bfs(grid, d, v, num, s/m, s%m, m);
+            for(boolean[] vv : v) {
+                Arrays.fill(vv,false);
+            }
+        }
+        int ret = minDist(grid, d, num, src.size());
+        return ret;
+    }
+    int minDist(int[][] g, int[][] a,int[][] num, int size) {
+        Integer ret = -1;
+        for(int i = 0;i<a.length;i++) {
+            for(int j = 0;j<a[0].length;j++) {
+                if(g[i][j] == 0 && num[i][j] == size) {
+                    if(ret < 0 || ret > a[i][j]) {
+                        ret = a[i][j];    
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+    List<Integer> sources(int[][] a) {
+        List<Integer> r = new ArrayList<>();
+        for(int i = 0 ;i<a.length;i++) {
+            for(int j = 0; j<a[0].length;j++) {
+                if(a[i][j] == 1) {
+                    r.add(i*a[0].length + j);
+                }
+            }
+        }
+        return r;
+    }
+    private void bfs(int[][] grid, int[][] d, boolean[][] v, int[][] num, int i, int j, int m) {
+        Queue<Integer> q= new LinkedList<>();
+        Queue<Integer> next = new LinkedList<>();
+        Queue<Integer> temp = null;
+        q.add(i*m+j);
+        int l = 0;
+        while(!q.isEmpty()) {
+            while(!q.isEmpty()) {
+                Integer cur = q.poll();
+                d[cur/m][cur%m] += l;
+                num[cur/m][cur%m] +=1;
+                next.addAll(getNext(grid, v, cur/m, cur%m, m));
+            }
+            l++;
+            temp = q;
+            q=next;
+            next=temp;
+        }
+    }
+    int[][] k = {{1,0},{-1,0},{0,1},{0,-1}};
+    List<Integer> getNext(int[][] g, boolean[][] v, int i, int j, int m) {
+        List<Integer> ret = new ArrayList<>();
+        for(int s =0;s<k.length;s++) {
+            int x = i + k[s][0];
+            int y = j + k[s][1];
+            if(x<0 || y<0 || x>=g.length || y>=m) {
+                continue;
+            }
+            if(g[x][y] != 0 || v[x][y]) {
+                continue;
+            }
+            v[x][y] = true;
+            ret.add(x*m+y);
+        }
+        return ret;
+    }
+    
+    
+}
+
 /*
 You want to build a house on an empty land which reaches all buildings in the shortest amount of distance. You can only move up, down, left and right. You are given a 2D grid of values 0, 1 or 2, where:
 
