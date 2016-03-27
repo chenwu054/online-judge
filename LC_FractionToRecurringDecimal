@@ -1,3 +1,35 @@
+public class Solution {
+    public String fractionToDecimal(int num, int denom) {
+        StringBuilder sb = new StringBuilder();
+        if(num>0&&denom<0 ||denom>0&&num<0) {
+            sb.append('-');
+        }
+        long n = Math.abs((long) num);
+        long d = Math.abs((long) denom);
+        long a = n/d;
+        long r = n%d;
+        sb.append(a);
+        if(r == 0) {
+            return sb.toString();
+        }
+        sb.append('.');
+        Map<Long,Integer> map =new HashMap<Long, Integer>();
+        while(!map.containsKey(r)) {
+            map.put(r, sb.length());
+            n = r * 10 / d;
+            r = (r *10) % d;
+            if(r !=0 || (r==0 && !map.containsKey(r))) {
+                sb.append(n);
+            }
+        }
+        if(r != 0) {
+            sb.insert(map.get(r), "(");
+            sb.append(')');
+        }
+        return sb.toString();
+    }
+}
+
 /*
 Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
 
