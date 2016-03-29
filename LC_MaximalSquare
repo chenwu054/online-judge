@@ -1,3 +1,35 @@
+public class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if(matrix == null || matrix.length == 0) {
+            return 0;
+        }
+        int n = matrix.length, m = matrix[0].length;
+        int[] a = new int[m];
+        int[][] dp = new int[n][m];
+        int max = 0, h = 0;
+        for(int i =0;i<n;i++) {
+            h = 0;
+            for(int j =0;j<m;j++) {
+                if(matrix[i][j] == '0') {
+                    dp[i][j] = 0;
+                    h = 0;
+                    a[j] = 0;
+                } else {
+                    h += 1;
+                    a[j] +=1;
+                    int l = Math.min(a[j], h);
+                    if(i>0 && j>0) {
+                        l = Math.min(dp[i-1][j-1] + 1, l);
+                    }
+                    dp[i][j] = l;
+                    max = Math.max(max, l);
+                }
+            }
+        }
+        return max*max;
+    }
+}
+
 class Solution:
     #param matrix: a matrix of 0 and 1
     #return: an integer
