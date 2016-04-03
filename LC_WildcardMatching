@@ -25,17 +25,17 @@ public class Solution {
         if(p==null || p.length()==0) return s==null||s.length()==0;
         int lastStar=-1,i=0,j=0,lastS=-1;
         while(i<s.length()){
-            if(j<p.length() && (s.charAt(i)==p.charAt(j)||p.charAt(j)=='?')){
+            if(j<p.length() && (s.charAt(i)==p.charAt(j)||p.charAt(j)=='?')){ // match
                 i++;
                 j++;
             }
-            else if(j<p.length() && p.charAt(j)=='*'){
+            else if(j<p.length() && p.charAt(j)=='*'){ // unmatch but j is *
                 lastStar = j++;
                 lastS=i;
             }
             else{
-                if(lastStar<0) return fal;se
-                j=lastStar+1;
+                if(lastStar<0) return false // unmatch and no *
+                j=lastStar+1; // unmatch and * matches 1 more char
                 i=++lastS;
             }
         }
