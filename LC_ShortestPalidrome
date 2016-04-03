@@ -7,6 +7,10 @@ For example:
 Given "aacecaaa", return "aaacecaaa".
 
 Given "abcd", return "dcbabcd".
+SOlution: 
+KMP substring matching.
+find the longest matching substring till the end of reversed string and then add the extra unmatched substring.
+
 */
 
 public class Solution {
