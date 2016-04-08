@@ -15,43 +15,34 @@ find the longest matching substring till the end of reversed string and then add
 
 public class Solution {
     public String shortestPalindrome(String s) {
-        if(s==null||s.length()==0) return s;
+        if(s == null || s.length() < 2) {
+            return s;
+        }
+        String rs = new StringBuilder(s).reverse().toString();
         int n = s.length();
         int[] lcp = new int[n];
-        int len=0;
-        for(int i=1;i<n;){
-            if(s.charAt(i)==s.charAt(len)){
-                lcp[i++]=++len;
-            }
-            else{
-                if(len>0){
-                    len=lcp[len-1];
-                }
-                else{
-                    i++;
-                }
-            }
-        }
-        len=0;
-        String reverseString = new StringBuilder(s).reverse().toString();
-        for(int i=0;i<n;){
-            if(s.charAt(len)==reverseString.charAt(i)){
+        int l = 0;
+        for(int i = 1;i<n;) {
+            if(s.charAt(i) == s.charAt(l)) {
+                lcp[i++] = ++l;
+            } else if(l>0) {
+                l = lcp[l-1];
+            } else {
                 i++;
-                len++;
-            }
-            else{
-                if(len>0){
-                    len=lcp[len-1];
-                }
-                else{
-                    i++;
-                }
-            }
-            if(i==n){
-                return reverseString+s.substring(len);
             }
         }
-        return s;
+        l = 0;
+        for(int i = 0;i<n;) {
+            if(rs.charAt(i) == s.charAt(l)) {
+                i++;
+                l++;
+            } else if(l>0) {
+                l = lcp[l-1];
+            } else {
+                i++;
+            }
+        }
+        return rs + s.substring(l);
     }
 }
 
