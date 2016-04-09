@@ -1,0 +1,55 @@
+/*
+Given an integer array nums, return the number of range sums that lie in [lower, upper] inclusive.
+Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j (i ≤ j), inclusive.
+
+Note:
+A naive algorithm of O(n2) is trivial. You MUST do better than that.
+
+Example:
+Given nums = [-2, 5, -1], lower = -2, upper = 2,
+Return 3.
+The three ranges are : [0, 0], [2, 2], [0, 2] and their respective sums are: -2, -1, 2.
+*/
+public class Solution {
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        if(nums == null || nums.length == 0) {
+            return 0;
+        }
+        int n = nums.length;
+        long[] s = new long[n+1];
+        for(int i = 0;i<n;i++) {
+            s[i+1] =  s[i] + nums[i];
+        }
+        return merge(s,0,n,lower, upper);
+    }
+    int merge(long[] sum, int s, int e, int l, int u) {
+        if(e<=s) {
+            return 0;
+        }
+        // if(e==s) {
+        //     return (sum[s] <=u && sum[s]>=l)?1:0;
+        // }
+        int m = s + ((e-s)>>1);
+        int left = merge(sum, s, m, l, u);
+        int right = merge(sum, m+1, e, l, u);
+        int j = m+1, k =m+1, c = m+1, d = 0, count =0;
+        long[] t = new long[e-s+1];
+        for(int i = s;i<=m;i++) {
+            while(j<=e && sum[j] - sum[i]<l) {
+                j++;
+            }
+            while(k<=e && sum[k] - sum[i]<=u) {
+                k++;
+            }
+            while(c<=e && sum[c] < sum[i]) {
+                t[d++]=sum[c++];
+            }
+            if(k>j) {
+                count += k-j;
+            }
+            t[d++] = sum[i];
+        }
+        System.arraycopy(t,0,sum,s, c-s);
+        return left + right + count;
+    }
+}
