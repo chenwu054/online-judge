@@ -1,3 +1,85 @@
+class Solution {
+public:
+    void initializePredecessor( TreeNode* cur, stack<TreeNode*>& pre, double target){
+        
+         while(cur){
+            if(cur->val==target){
+                pre.push(cur);
+                break;
+            }
+            else if(cur->val < target){
+                pre.push(cur);
+                cur=cur->right;
+            }
+            else
+                cur=cur->left;
+        }
+    }
+    
+    void initializeSucessor( TreeNode* cur, stack<TreeNode*>& suc, double target){
+         while(cur){
+            if(cur->val==target){
+                suc.push(cur);
+                break;
+            }
+            else if(cur->val > target){
+                suc.push(cur);
+                cur=cur->left;
+            }
+            else
+                cur=cur->right;
+        }
+    }
+
+        
+    int getNextPredecessor(stack<TreeNode*> & pre){
+        TreeNode* top= pre.top(); pre.pop();
+        TreeNode* cur=top->left;
+        while(cur){
+            pre.push(cur);
+            cur=cur->right;
+        }
+        return top->val;
+    }
+    
+    int getNextSucessor(stack<TreeNode*>& suc){
+        TreeNode* top= suc.top(); suc.pop();
+        TreeNode* cur=top->right;
+        while(cur){
+            suc.push(cur);
+            cur=cur->left;
+        }
+        return top->val;
+    }
+
+    vector<int> closestKValues(TreeNode* root, double target, int k) {
+        //if( k <=0) return {};
+        stack<TreeNode*> pre, suc;
+        initializePredecessor(root, pre, target);
+        initializeSucessor(root, suc, target);
+        if(!pre.empty() && !suc.empty() && pre.top()->val == suc.top()->val)
+            getNextSucc(suc);
+        
+        vector<int> res;
+        for(;k>0;k--){
+            if(suc.empty())
+                res.push_back(getNextPredecessor(pre));
+            else if(pre.empty())
+                res.push_back(getNextSucessor(suc));
+            else{
+                double pre_diff= abs((float) pre.top()->val-target);
+                double suc_diff= abs((float) suc.top()->val-target);
+                if(pre_diff<suc_diff)
+                    res.push_back(getNextPredecessor(pre));
+                else
+                    res.push_back(getNextSucessor(suc));
+            }
+        }
+        return res;
+    }
+};
+
+
 /*
 Given a non-empty binary search tree and a target value, find the value in the BST that is closest to the target.
 
