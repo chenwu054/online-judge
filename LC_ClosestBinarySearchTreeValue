@@ -1,3 +1,96 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    void initSucStack(TreeNode root, Stack<TreeNode> suc, double target) {
+        while(root != null) {
+            if(root.val >= target) {
+                suc.push(root);
+                if(root.val == target) {
+                    return;
+                }
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+    }
+    void initPreStack(TreeNode root, Stack<TreeNode> pre, double target) {
+        while(root!=null) {
+            if(root.val <= target) {
+                pre.push(root);
+                if(root.val == target) {
+                    return;
+                }
+                root = root.right;
+            } else{
+                root = root.left;
+            }
+        }
+    }
+    Integer getNextSuc(Stack<TreeNode> k) {
+        if(k.isEmpty()) {
+            return null;
+        }
+        TreeNode ret = k.pop();
+        if(ret.right!=null) {
+            k.push(ret.right);
+            while(k.peek().left != null) {
+                k.push(k.peek().left);
+            }
+        }
+        return ret.val;
+    }
+    Integer getNextPre(Stack<TreeNode> k) {
+        if(k.isEmpty()) {
+            return null;
+        }
+        TreeNode ret = k.pop();
+        if(ret.left != null ) {
+            k.push(ret.left);
+            while(k.peek().right!=null) {
+                k.push(k.peek().right);
+            }
+        }
+        return ret.val;
+    }
+    
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+        List<Integer> ret = new ArrayList<>();
+        if(root==null || k ==0) {
+            return ret;
+        }
+        Stack<TreeNode> suc = new Stack<>();
+        Stack<TreeNode> pre = new Stack<>();
+        initSucStack(root, suc, target);
+        initPreStack(root, pre, target);
+        if(!suc.isEmpty() && !pre.isEmpty() && suc.peek().val == pre.peek().val) {
+            getNextSuc(suc);
+        }
+        while(ret.size() < k) {
+            if(suc.isEmpty()) {
+                ret.add(getNextPre(pre));
+            } else if(pre.isEmpty()) {
+                ret.add(getNextSuc(suc));
+            } else {
+                if(Math.abs(suc.peek().val - target) < Math.abs(pre.peek().val-target)) {
+                    ret.add(getNextSuc(suc));
+                } else {
+                    ret.add(getNextPre(pre));
+                }
+            }
+        }
+        return ret;
+    }
+}
+
+
 class Solution {
 public:
     void initializePredecessor( TreeNode* cur, stack<TreeNode*>& pre, double target){
