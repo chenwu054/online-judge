@@ -1,3 +1,68 @@
+public class Solution {
+    int[] getMaxOne(int[] a, int k) {
+        int n = a.length;
+        int[] ret = new int[k];
+        if(k ==0) {
+            return ret;
+        }
+        for(int i = 0,j=0;i<n;i++) {
+            while(n-i + j > k && j>0 && ret[j-1] < a[i]) { // tricky
+                j--;
+            }
+            if(j<k) {
+                ret[j] = a[i];
+                j++;    
+            }
+        }
+        return ret;
+    }
+    int[] merge(int[] a, int[] b) {
+        if(a.length == 0) {
+            return b;
+        }
+        if(b.length == 0) {
+            return a;
+        }
+        int[] ret = new int[a.length+b.length];
+        int i =0,j=0,k=0;
+        while(i<a.length && j<b.length) {
+            if(isGreater(a,b,i,j)) { // tricky!
+                ret[k++] = a[i++];
+            } else {
+                ret[k++] = b[j++];
+            }
+        }
+        while(i<a.length) {
+            ret[k++] = a[i++];
+        }
+        while(j<b.length) {
+            ret[k++] = b[j++];
+        }
+        return ret;
+    }
+    public int[] maxNumber(int[] nums1, int[] nums2, int k) {
+        int[] ret = null;
+        for(int i =Math.max(0,k-nums2.length);i<=Math.min(k, nums1.length);i++) {
+            int[] a = getMaxOne(nums1,i);
+            int[] b = getMaxOne(nums2,k-i);
+            int[] c = merge(a, b);
+            if(ret == null || isGreater(c, ret,0,0)) {
+                ret = c;
+            }
+        }
+        return ret;
+    }
+    boolean isGreater(int[] a, int[] b, int j, int k) {
+        int i =0;
+        for(;i+j<a.length && i+k<b.length; i++) {
+            if(a[i+j]!=b[i+k]) {
+                return a[i+j]>b[i+k];
+            }
+        }
+        return i+j<a.length; // tricky!
+    }
+}
+
 /*
 Given two arrays of length m and n with digits 0-9 representing two numbers. Create the maximum number of length k <= m + n from digits of the two. The relative order of the digits from the same array must be preserved. Return an array of the k digits. You should try to optimize your time and space complexity.
 
