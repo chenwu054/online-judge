@@ -1,3 +1,48 @@
+public class Solution {
+    char[] a = {'0','6','1','9','8'};
+    public List<String> findStrobogrammatic(int n) {
+        List<String> ret = new ArrayList<>();
+        Map<Character, Character> map =new HashMap<>();
+        map.put('0','0');
+        map.put('1','1');
+        map.put('6','9');
+        map.put('9','6');
+        map.put('8','8');
+        find(map, new StringBuilder(), n/2,0, n%2==1, ret);
+        return ret;
+    }
+    void find(Map<Character, Character> map, StringBuilder sb, int n, int i, boolean odd, List<String> ret) {
+        if(i==n) {
+            build(map, sb, odd, ret);
+            return;
+        }
+        int j = i==0?1:0; 
+        sb.append('0');
+        for(;j<a.length;j++) {
+            sb.setCharAt(sb.length() - 1, a[j]);
+            find(map, sb, n, i+1, odd, ret);
+        }
+        sb.deleteCharAt(sb.length() - 1);
+    }
+    void build(Map<Character,Character> map, StringBuilder sb, boolean odd, List<String> ret) {
+        StringBuilder s = new StringBuilder(sb);
+        if(odd) {
+            s.append('0');    
+        }
+        for(int i =sb.length() - 1; i>=0;i--) {
+            s.append(map.get(sb.charAt(i)));
+        }
+        if(!odd) {
+            ret.add(s.toString());
+        } else {
+            for(int i = 0;i<a.length;i+=2) {
+                s.setCharAt(sb.length(), a[i]);
+                ret.add(s.toString());
+            }
+        }
+    }
+}
+
 /*
 A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
 
