@@ -1,3 +1,40 @@
+/*
+III
+*/
+public class Solution {
+    int count = 0;
+    char[][] a = {{'0','0'},{'1','1'},{'6','9'},{'8','8'},{'9','6'}};
+    public int strobogrammaticInRange(String low, String high) {
+        count = 0;
+        for(int i = low.length();i<=high.length();i++) {
+            dfs(new char[i], 0, i-1, low, high);
+        }
+        return count;
+    }
+    void dfs(char[] c, int l, int r, String low, String high) {
+        if(l>r) {
+            String s = new String(c);
+            if(s.length()==low.length() && s.compareTo(low) < 0 
+            || s.length() == high.length() && s.compareTo(high) > 0) {
+                return;
+            }
+            count++;
+            return ;
+        }
+        for(char[] b : a) {
+            c[l] = b[0];
+            c[r] = b[1];
+            if(c.length>1 && c[0] == '0') {
+                continue;
+            }
+            if(l<r || (l==r && b[0] == b[1])) {
+                dfs(c, l+1, r-1, low, high);
+            }
+        }
+    }
+}
+
+
 public class Solution {
     char[] a = {'0','6','1','9','8'};
     public List<String> findStrobogrammatic(int n) {
