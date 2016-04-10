@@ -4,6 +4,52 @@ The algorithm should run in linear time and in O(1) space.
 */
 public class Solution {
     public List<Integer> majorityElement(int[] nums) {
+        int k = 3, n = nums.length;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i =0 ;i<nums.length;i++) {
+            addMap(map, nums[i]);
+            if(map.size() == k) {
+                removeMap(map);
+            }
+        }
+        List<Integer> ret = new ArrayList<>();
+        Map<Integer, Integer> count = new HashMap<>();
+        for(int i =0;i<nums.length;i++) {
+            addMap(count, nums[i]);
+        }
+        for(Iterator<Map.Entry<Integer, Integer>> it = map.entrySet().iterator();it.hasNext();) {
+            Map.Entry<Integer,Integer> a = it.next();
+            if(count.get(a.getKey()) > n/k) {
+                ret.add(a.getKey());
+            }
+        }
+        return ret;
+    }
+    void addMap(Map<Integer, Integer> map, int a) {
+        if(!map.containsKey(a)) {
+            map.put(a, 1);
+        } else {
+            map.put(a,map.get(a) + 1);
+        }
+    }
+    void removeMap(Map<Integer, Integer> map) {
+        for(Iterator<Map.Entry<Integer, Integer>> it = map.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Integer, Integer> a = it.next();
+            if(a.getValue() == 1) {
+                it.remove();
+            } else {
+                a.setValue(a.getValue() - 1);
+            }
+        }
+    }
+}
+
+/*
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times. 
+The algorithm should run in linear time and in O(1) space.
+*/
+public class Solution {
+    public List<Integer> majorityElement(int[] nums) {
         List<Integer> ret = new ArrayList<Integer>();
         if(nums==null || nums.length==0) return ret;
         Map<Integer,Integer> map =new HashMap<Integer,Integer>();
