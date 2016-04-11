@@ -4,7 +4,6 @@ use hashmap to prune the visited routes
 public class Solution {
     public List<String> wordBreak(String s, Set<String> wordDict) {
         List<String> ret = new ArrayList<>();
-        List<List<String>> dp = new ArrayList<List<String>>();
         Map<String, List<String>> v = new HashMap<>();
         return dfs(s, wordDict, v);
     }
