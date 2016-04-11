@@ -1,4 +1,90 @@
 public class Solution {
+    public int shortestDistance(int[][] grid) {
+        if(grid == null || grid.length==0) {
+            return 0;
+        }
+        int n =grid.length,m=grid[0].length;
+        List<Integer> src = findSources(grid,n,m);
+        boolean[][] v =new boolean[n][m];
+        int[][] d = new int[n][m];
+        int[][] count = new int[n][m];
+        for(int i=0;i<src.size();i++) {
+            int cur = src.get(i);
+            bfs(grid, v, d, count, cur/m,cur%m,n,m);
+            clearV(v, n);
+        }
+        Integer min = null;
+        for(int i =0;i<n;i++) {
+            for(int j=0;j<m;j++) {
+                if(grid[i][j] == 0 && count[i][j]==src.size()) {
+                    if(min == null || min>d[i][j]) {
+                        min=d[i][j];
+                    }
+                }
+            }
+        }
+        return min==null?-1:min;
+    }
+    void clearV(boolean[][] v, int n) {
+        for(int i=0;i<n;i++) {
+            Arrays.fill(v[i], false);
+        }
+    }
+    void bfs(int[][] g, boolean[][] v, int[][] d, int[][] count, int x, int y, int n, int m) {
+        Queue<Integer> q =new LinkedList<>();
+        Queue<Integer> next = new LinkedList<>();
+        Queue<Integer> t = null;
+        q.add(x*m+y);
+        v[x][y] = true;
+        int l =0;
+        while(!q.isEmpty()) {
+            while(!q.isEmpty()) {
+                int c = q.poll();
+                d[c/m][c%m] += l;
+                count[c/m][c%m]++;
+                List<Integer> nn = findNext(g, v, c/m,c%m,n,m);
+                next.addAll(nn);
+            }
+            t = q;
+            q=next;
+            next = t;
+            l++;
+        }
+    }
+    int[][] k = {{1,0},{-1,0},{0,1},{0,-1}};
+    List<Integer> findNext(int[][] g, boolean[][] v, int x, int y, int n, int m) {
+        List<Integer> ret = new ArrayList<>();
+        for(int i =0;i<k.length;i++) {
+            int s = x+ k[i][0];
+            int t = y+k[i][1];
+            if(valid(g, v, s, t, n, m)) {
+                v[s][t] = true;
+                ret.add(s*m+t);
+            }
+        }
+        return ret;
+    }
+    boolean valid(int[][] g, boolean[][] v,int i, int j, int n, int m){
+        if(i<0 || j<0 || i>=n || j>=m || v[i][j] || g[i][j]!=0) {
+            return false;
+        }
+        return true;
+    }
+    List<Integer> findSources(int[][] g, int n, int m) {
+        List<Integer> ret = new ArrayList<>();
+        for(int i =0;i<n;i++) {
+            for(int j=0;j<m;j++) {
+                if(g[i][j] == 1) {
+                    ret.add(i*m + j);
+                }
+            }
+        }
+        return ret;
+    }
+}
+// ==========================
+
+public class Solution {
     
     public int shortestDistance(int[][] grid) {
         if(grid == null || grid.length == 0) {
