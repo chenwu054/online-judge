@@ -1,4 +1,83 @@
 public class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> ret =new ArrayList<>();
+        Map<Integer, Set<Integer>> g = new HashMap<>();
+        buildGraph(edges, g);
+        int[] d = new int[n];
+        int[] p = new int[n];
+        boolean[] v = new boolean[n];
+        int len = bfs(g, 0, d, p, v);
+        int start = 0;
+        for(int i =0;i<n;i++) {
+            if(d[i] == len) {
+                start = i;
+                break;
+            }
+        }
+        Arrays.fill(v, false);
+        len = bfs(g, start, d, p, v);
+        int end = 0;
+        for(int i =0;i<n;i++) {
+            if(d[i] == len) {
+                end = i;
+                break;
+            }
+        }
+        for(int i =0;i<len/2;i++) {
+            end = p[end];
+        }
+        ret.add(end);
+        if(len%2==1) {
+            ret.add(p[end]);
+        }
+        return ret;
+    }
+    int bfs(Map<Integer, Set<Integer>>g, int start, int[] d, int[] p, boolean[] v) {
+        int l = 0;
+        Queue<Integer> q =new LinkedList<>();
+        Queue<Integer> next =new LinkedList<>();
+        Queue<Integer> temp = null;
+        q.add(start);
+        v[start]=true;
+        p[start] = start;
+        while(!q.isEmpty()) {
+            while(!q.isEmpty()) {
+                int cur = q.poll();
+                d[cur] = l;
+                if(g.containsKey(cur)) {
+                    for(Integer a : g.get(cur)) {
+                        if(!v[a]) {
+                            v[a]=true;
+                            next.add(a);
+                            p[a]=cur;
+                        }
+                    }
+                }
+            }
+            temp = q;
+            q=next;
+            next=temp;
+            l++;
+        }
+        return l-1;
+    }
+    void buildGraph(int[][] edges, Map<Integer, Set<Integer>> map) {
+        for(int[] e : edges) {
+            if(!map.containsKey(e[0])) {
+                map.put(e[0],new HashSet<>());
+            }
+            if(!map.containsKey(e[1])) {
+                map.put(e[1],new HashSet<>());
+            }
+            map.get(e[1]).add(e[0]);
+            map.get(e[0]).add(e[1]);
+        }
+    }
+    
+}
+// =============================================
+
+public class Solution {
     /*
     1. find leaf node
     2. find the longest path from the leaf node
