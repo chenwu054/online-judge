@@ -1,5 +1,47 @@
 public class Solution {
     public String removeDuplicateLetters(String s) {
+        if(s == null || s.length() ==0 ) {
+            return s;
+        }
+        Map<Character, Integer> map = initMap(s);
+        int size = map.size();
+        Stack<Character> k =new Stack<>();
+        Set<Character> v =new HashSet<>();
+        for(int i =0;i<s.length();i++) {
+            char c= s.charAt(i);
+            map.put(c, map.get(c)-1);
+            if(map.get(c)==0) {
+                map.remove(c);
+            }
+            if(!v.contains(c)) {
+                while(!k.isEmpty() && k.peek()>c && map.containsKey(k.peek())) {
+                    char d = k.pop();
+                    v.remove(d);
+                }
+                k.push(c);
+                v.add(c);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!k.isEmpty()) {
+            sb.append(k.pop());
+        }
+        return sb.reverse().toString();
+    }
+    Map<Character,Integer> initMap(String s) {
+        Map<Character,Integer>map =new HashMap<>();
+        for(int i =0;i<s.length();i++) {
+            char c = s.charAt(i);
+            map.put(c,(map.containsKey(c)?map.get(c):0)+1);
+        }
+        return map;
+    }
+}
+
+//====== array ======
+
+public class Solution {
+    public String removeDuplicateLetters(String s) {
         if(s == null || s.length() == 0) {
             return s;
         }
