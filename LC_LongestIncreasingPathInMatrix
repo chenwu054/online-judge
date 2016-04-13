@@ -1,3 +1,47 @@
+public class Solution {
+    public int longestIncreasingPath(int[][] matrix) {
+        if(matrix==null || matrix.length==0) {
+            return 0;
+        }
+        int n = matrix.length, m = matrix[0].length;
+        int[][] v = new int[n][m];
+        int max =0;
+        for(int i =0;i<n;i++) {
+            for(int j =0;j<m;j++) {
+                int l =dfs(matrix, v, i, j, n, m);
+                max = Math.max(max, l);
+            }
+        }
+        return max;
+    }
+    boolean valid(int i, int j, int n, int m) {
+        if(i<0||j<0||i>=n||j>=m) {
+            return false;
+        }
+        return true;
+    }
+    int[][] k = {{-1,0},{1,0},{0,1},{0,-1}};
+    int dfs(int[][] a, int[][] v, int i, int j, int n, int m) {
+        if(v[i][j]>0) {
+            return v[i][j];
+        }
+        int max = 0;
+        for(int s = 0;s<k.length;s++) {
+            int[] b = k[s];
+            int x = i+b[0];
+            int y = j+b[1];
+            if(valid(x,y,n,m) && a[x][y] > a[i][j]) {
+                int l = dfs(a,v,x,y,n,m);
+                if(l>max) {
+                    max=l;
+                }
+            }
+        } 
+        v[i][j]=max+1;
+        return v[i][j];
+    }
+}
+
 /*
 Given an integer matrix, find the length of the longest increasing path.
 
