@@ -1,3 +1,73 @@
+class SegmentTreeNode {
+    int start, end;
+    int num;
+    SegmentTreeNode ltree, rtree;
+    public SegmentTreeNode(int s, int e) {
+        start = s;
+        end = e;
+    }
+}
+​
+public class Solution { 
+    SegmentTreeNode root = null;
+    
+    public SegmentTreeNode buildTree(int[] nums, int left, int right) {
+        SegmentTreeNode root = new SegmentTreeNode(left, right);
+        if (left != right) {
+            int mid = left + (right - left)/2;
+            root.ltree = buildTree(nums, left, mid);
+            root.rtree = buildTree(nums, mid+1, right);
+        }
+        return root;
+    }
+    
+    private void update(SegmentTreeNode root, int i, int val) {
+        if (root.start == root.end) {
+            root.num += 1;
+        } else {
+            int mid = root.start + (root.end - root.start)/2;
+            if (i <= mid) {
+                update(root.ltree, i, val);
+            } else {
+                update(root.rtree, i, val);
+            }
+            root.num = root.ltree.num + root.rtree.num;
+        }
+    }
+​
+    private int query(SegmentTreeNode root, int i, int j) {
+        if (root.start == i && root.end == j) {
+            return root.num;
+        } else {
+            int mid = root.start + (root.end - root.start)/2;
+            if (j <= mid) {
+                return query(root.ltree, i, j);
+            } else if (i > mid) {
+                return query(root.rtree, i, j);
+            } else {
+                return query(root.ltree, i, root.ltree.end) + query(root.rtree, root.rtree.start, j);
+            }
+        }
+    }
+​
+    public List<Integer> countSmaller(int[] nums) {
+        int[] tmp = nums.clone();
+        Arrays.sort(tmp);
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = Arrays.binarySearch(tmp, nums[i]) + 1;
+        }
+        int[] bit = new int[nums.length + 1];
+        root = buildTree(bit, 0, bit.length-1);
+        Integer[] ans = new Integer[nums.length];
+        for (int i = nums.length - 1; i >= 0; i--) {
+            ans[i] = query(root, 0, nums[i] - 1);
+            update(root, nums[i], 1);
+        }
+        return Arrays.asList(ans);
+    }
+}
+
+
 /*
 You are given an integer array nums and you have to return a new counts array. The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].
 
