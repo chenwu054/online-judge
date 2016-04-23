@@ -10,6 +10,11 @@ Some examples:
 " 3/2 " = 1
 " 3+5 / 2 " = 5
 Note: Do not use the eval built-in library function.
+Solution:
+1. lower precedence is +/- denoted by pre and sign 
+2. *// are high precedence denoted by cur and op 
+3. op==0 is lower precedence, and op == 1 is multiply and op==-1 is divide.
+
 */
 
 public int calculate(String s) {
