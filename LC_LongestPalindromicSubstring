@@ -1,4 +1,31 @@
 /*
+dp
+*/
+public class Solution {
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        boolean[][] dp = new boolean[n][n];
+        int start=0, end =0;
+        for(int len = 0;len<n;len++) {
+            for(int i = 0;i<n-len;i++) {
+                if(len==0) {
+                    dp[i][i+len] = true;
+                } else if(len==1) {
+                    dp[i][i+len] = s.charAt(i)==s.charAt(i+len);
+                } else {
+                    dp[i][i+len] = (s.charAt(i)==s.charAt(i+len)) && dp[i+1][i+len-1];
+                }
+                if(dp[i][i+len] && len > (end - start)) {
+                    start = i;
+                    end = i+len;
+                }
+            }
+        }
+        return s.substring(start, end+1);
+    }
+}
+
+/*
 Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
 
 */
