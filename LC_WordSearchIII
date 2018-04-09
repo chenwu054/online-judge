@@ -82,3 +82,67 @@ public class Solution {
         }
     }
 }
+=======
+class TrieNode:
+    def __init__(self):
+        self.next_nodes=[None for i in range(26)]
+        self.is_word=False
+        return None
+        
+class Solution:
+    
+    def insert(self, root, word, index):
+        if index==len(word):
+            root.is_word=True
+            return 
+        if root.next_nodes[ord(word[index])-ord('a')] == None:
+            root.next_nodes[ord(word[index])-ord('a')] = TrieNode()
+        self.insert(root.next_nodes[ord(word[index])-ord('a')], word, index+1)
+        
+    def query(self, root, word, index):
+        if index==len(word):
+            return True
+        if root.next_nodes[ord(word[index])-ord('a')]==None:
+            return False
+        return self.query(root.next_nodes[ord(word[index]) - ord('a')], word, index+1)
+    
+    def is_valid(self, board, i, j):
+        return i>=0 and j>=0 and i<len(board) and j<len(board[0])
+    idx = [[0, 1], [0, -1], [1, 0] ,[-1, 0]]
+    def find(self, board, visited, i, j, root, word, res):
+        if visited[i][j]:
+            return
+        next_char = board[i][j]
+        index = ord(next_char) - ord('a')
+        if root.next_nodes[index] == None:
+            return 
+        if root.next_nodes[index].is_word:
+            res.add(word+next_char)
+        visited[i][j] = True
+        for row in self.idx:
+            if self.is_valid(board, i+row[0], j+row[1]) and not visited[i+row[0]][j+row[1]]:
+                self.find(board, visited, i+row[0], j+row[1], root.next_nodes[index], word + next_char, res)
+        visited[i][j] = False
+        
+    def findWords(self, board, words):
+        """
+        :type board: List[List[str]]
+        :type words: List[str]
+        :rtype: List[str]
+        """
+        if board==None or len(board)==0:
+            return []
+        root = TrieNode()
+        for word in words: 
+            self.insert(root, word, 0)
+        res=set()
+        n,m = len(board), len(board[0])
+        visited = [[False for j in range(m)] for i in range(n)]
+        for i in range(n):
+            for j in range(m):
+                self.find(board, visited, i, j,root, "", res)
+        ret = []
+        for w in res:
+            ret.append(w)
+        return ret
+        
