@@ -42,7 +42,7 @@ class Solution:
     def orientation(self, s, m, e):
         # (m.x-s.x, m.y-s.y) m-s
         # (e.x-m.x, e.y-m.y) e-m
-        return (e.x-m.x) * (m.y-s.y) - (m.x-s.x) * (e.y-m.y)
+        return (m.x-s.x) * (e.y-m.y) - (e.x-m.x) * (m.y-s.y)
 
     def outerTrees(self, points):
         """
@@ -59,7 +59,7 @@ class Solution:
         while m != bottom:
             m = 1 if s == 0 else 0
             for j in range(len(points)):
-                if j!=s and j!=m and self.orientation(points[s],points[m],points[j])>0:
+                if j!=s and j!=m and self.orientation(points[s],points[m],points[j])<0: # should be >0, but only set if not >0
                     m=j
             for j in range(len(points)):
                 if j!=s and j!=m and self.orientation(points[s],points[m],points[j])==0:
