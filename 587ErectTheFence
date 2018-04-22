@@ -1,0 +1,85 @@
+There are some trees, where each tree is represented by (x,y) coordinate in a two-dimensional garden. Your job is to fence the entire garden using the minimum length of rope as it is expensive. The garden is well fenced only if all the trees are enclosed. Your task is to help find the coordinates of trees which are exactly located on the fence perimeter.
+
+Example 1:
+Input: [[1,1],[2,2],[2,0],[2,4],[3,3],[4,2]]
+Output: [[1,1],[2,0],[4,2],[3,3],[2,4]]
+Explanation:
+
+Example 2:
+Input: [[1,2],[2,2],[4,2]]
+Output: [[1,2],[2,2],[4,2]]
+Explanation:
+
+Even you only have trees in a line, you need to use rope to enclose them. 
+Note:
+
+All trees should be enclosed together. You cannot cut the rope to enclose trees that will separate them in more than one group.
+All input integers will range from 0 to 100.
+The garden has at least one tree.
+All coordinates are distinct.
+Input points have NO order. No order required for output.
+
+
+class Point:
+    def __init__(self, a, b):
+        self.x=a
+        self.y=b
+        return None
+
+    def __repr__(self):
+        return '(' + str(self.x) + ':' + str(self.y) + ')'
+
+class Solution:
+    def find_bottom_index(self, points):
+        b = 0
+        for i in range(1, len(points)):
+            if points[i].y < points[b].y:
+                b=i
+            elif points[i].y == points[b].y and points[i].x < points[b].x:
+                b=i
+        return b
+
+    def orientation(self, s, m, e):
+        # (m.x-s.x, m.y-s.y) m-s
+        # (e.x-m.x, e.y-m.y) e-m
+        return (e.x-m.x) * (m.y-s.y) - (m.x-s.x) * (e.y-m.y)
+
+    def outerTrees(self, points):
+        """
+        :type points: List[Point]
+        :rtype: List[Point]
+        """
+        if len(points)<4:
+            return points
+        res_set=set()
+        s=self.find_bottom_index(points)
+        bottom = s
+        res_set.add(s)
+        m= 1 if s==0 else 0
+        while m != bottom:
+            m = 1 if s == 0 else 0
+            for j in range(len(points)):
+                if j!=s and j!=m and self.orientation(points[s],points[m],points[j])>0:
+                    m=j
+            for j in range(len(points)):
+                if j!=s and j!=m and self.orientation(points[s],points[m],points[j])==0:
+                    res_set.add(j)
+            s=m
+            res_set.add(s)
+        res=[]
+        for i in res_set:
+            res.append(points[i])
+        return res
+
+input = [[0,0],[0,1],[0,2],[1,2],[2,2],[3,2],[3,1],[3,0],[2,0],[1,0],[1,1],[3,3]]
+points = []
+for i in input:
+    p=Point(i[0], i[1])
+    points.append(p)
+print(points)
+s=Solution()
+res=s.outerTrees(points)
+print(res)
+
+
+
